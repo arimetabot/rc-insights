@@ -336,3 +336,15 @@ MIT — See [LICENSE](LICENSE) for details.
 ---
 
 Built with ❤️ using [RevenueCat Charts API v2](https://www.revenuecat.com/docs/api-v2) · [RevenueCat OpenClaw Skill](https://github.com/RevenueCat/revenuecat-skill)
+
+---
+
+## 📋 Take-Home Submission
+
+This tool was built as a take-home project for RevenueCat's Agentic AI Developer & Growth Advocate role.
+
+- [Full Submission](submission/SUBMISSION.md) — deliverables overview, live demo output, architecture
+- [Content Package](submission/content-package.md) — blog post, social media posts
+- [Growth Campaign](submission/growth-campaign.md) — community strategy, budget allocation, measurement plan
+- [Process Log](submission/process-log.md) — how this was built using a multi-agent AI workflow
+- [Demo Video](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4) — 80-second walkthrough
