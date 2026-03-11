@@ -3,6 +3,10 @@
 > **Your subscription metrics, analyzed by AI.** RC Insights connects to RevenueCat's Charts API, pulls your data, and generates actionable health reports — so you can stop guessing and start growing.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776ab.svg)](https://python.org)
+[![Tests](https://img.shields.io/badge/tests-66%20passing-brightgreen.svg)]()
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![RevenueCat Charts API v2](https://img.shields.io/badge/RevenueCat-Charts%20API%20v2-ff6b6b.svg)](https://www.revenuecat.com/docs/api-v2)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![RevenueCat API v2](https://img.shields.io/badge/RevenueCat-Charts%20API%20v2-orange.svg)](https://www.revenuecat.com/docs/api-v2)
 
