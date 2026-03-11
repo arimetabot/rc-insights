@@ -39,6 +39,7 @@ web = [
 dev = [
     "pytest>=8.0",
     "ruff>=0.3",
+    "mypy>=1.0",
 ]
 
 [project.scripts]

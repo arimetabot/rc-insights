@@ -6,7 +6,7 @@ import json
 import logging
 import time
 from datetime import date, timedelta
-from typing import Any
+from typing import Any, cast
 
 import httpx
 
@@ -78,7 +78,7 @@ class ChartsClient:
                 response = self._client.request(method, url, **kwargs)
 
                 if response.status_code == 200:
-                    return response.json()
+                    return cast(dict[str, Any], response.json())
                 elif response.status_code == 401:
                     raise AuthenticationError(
                         "Invalid API key or insufficient permissions.",

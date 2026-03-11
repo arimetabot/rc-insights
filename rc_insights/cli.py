@@ -166,9 +166,11 @@ def chart(
     name: str = typer.Argument(help="Chart name (e.g., mrr, revenue, churn)"),
     days: int = typer.Option(30, "--days", "-d", help="Number of days"),
     resolution: str = typer.Option("day", "--resolution", "-r", help="Resolution: day, week, month"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
 ) -> None:
     """📈 Fetch and display a specific chart."""
-    api_key, project_id, _ = _get_config()
+    api_key, project_id, _ = _get_config(api_key, project_id)
 
     res_map = {"day": Resolution.DAY, "week": Resolution.WEEK, "month": Resolution.MONTH}
     res = res_map.get(resolution, Resolution.DAY)
@@ -239,9 +241,12 @@ def list_charts() -> None:
 
 
 @app.command()
-def check() -> None:
+def check(
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
+) -> None:
     """🔍 Verify your API key and connection."""
-    api_key, project_id, openai_key = _get_config()
+    api_key, project_id, openai_key = _get_config(api_key, project_id)
 
     console.print("[bold]Checking configuration...[/bold]\n")
 

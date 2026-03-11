@@ -7,8 +7,6 @@
 [![Tests](https://img.shields.io/badge/tests-66%20passing-brightgreen.svg)]()
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![RevenueCat Charts API v2](https://img.shields.io/badge/RevenueCat-Charts%20API%20v2-ff6b6b.svg)](https://www.revenuecat.com/docs/api-v2)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![RevenueCat API v2](https://img.shields.io/badge/RevenueCat-Charts%20API%20v2-orange.svg)](https://www.revenuecat.com/docs/api-v2)
 
 ---
 
@@ -271,7 +269,7 @@ All chart slugs below are **verified working** against the live RevenueCat Chart
 
 When an OpenAI key is provided, RC Insights:
 
-1. **Fetches** all core charts from the Charts API (10 key metrics)
+1. **Fetches** all core charts from the Charts API (9 confirmed-working endpoints)
 2. **Formats** the data into a concise summary with trends and statistics
 3. **Prompts** GPT-4o-mini with a subscription analytics expert persona
 4. **Parses** the structured JSON response into typed `Insight` objects
