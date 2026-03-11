@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -190,7 +190,7 @@ class Insight(BaseModel):
 class HealthReport(BaseModel):
     """Complete subscription health report."""
 
-    generated_at: datetime = Field(default_factory=datetime.now)
+    generated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     project_id: str
     period_start: date
     period_end: date
@@ -211,3 +211,45 @@ class HealthReport(BaseModel):
     @property
     def positive_insights(self) -> list[Insight]:
         return [i for i in self.insights if i.severity == "positive"]
+
+    @property
+    def chart_summaries(self) -> list[dict[str, str]]:
+        """Pre-compute chart summary rows for report rendering.
+
+        Returns:
+            List of dicts with keys: name, latest, vmin, vmax, trend.
+            Charts with no numeric data points are excluded.
+        """
+        rows: list[dict[str, str]] = []
+        for _key, chart in self.charts_data.items():
+            points = chart.data_points
+            values = [v for _, v in points if v is not None]
+            if not values:
+                continue
+
+            latest = f"{values[-1]:,.2f}"
+            vmin = f"{min(values):,.2f}"
+            vmax = f"{max(values):,.2f}"
+
+            if len(values) >= 7:
+                first = sum(values[:7]) / 7
+                last = sum(values[-7:]) / 7
+                if first > 0:
+                    change = ((last - first) / first) * 100
+                    emoji = "📈" if change > 2 else ("📉" if change < -2 else "➡️")
+                    trend = f"{emoji} {change:+.1f}%"
+                else:
+                    trend = "➡️ N/A"
+            else:
+                trend = "—"
+
+            rows.append(
+                {
+                    "name": chart.display_name,
+                    "latest": latest,
+                    "vmin": vmin,
+                    "vmax": vmax,
+                    "trend": trend,
+                }
+            )
+        return rows

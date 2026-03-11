@@ -80,7 +80,7 @@ def main() -> None:
         days = st.slider("Analysis Period (days)", 7, 90, 30)
         resolution = st.selectbox(
             "Resolution",
-            ["day", "week", "month"],
+            ["day", "week", "month", "quarter", "year"],
             index=0,
         )
         use_ai = st.checkbox("Enable AI Analysis", value=bool(openai_key))
@@ -103,7 +103,7 @@ def main() -> None:
             st.markdown("Enter your RevenueCat API key and project ID.")
         with col2:
             st.markdown("### 2. Analyze")
-            st.markdown("We pull all 21 chart types and run AI analysis.")
+            st.markdown("We pull all 9 core chart types and run AI analysis.")
         with col3:
             st.markdown("### 3. Act")
             st.markdown("Get actionable insights to grow your subscription business.")
@@ -112,12 +112,9 @@ def main() -> None:
 
         st.subheader("Available Charts")
         chart_categories = {
-            "💰 Revenue": ["MRR", "MRR Movement", "ARR", "Revenue"],
-            "👥 Subscribers": ["Active Subscribers", "New Subscribers", "Active Customers", "New Customers"],
-            "📉 Churn": ["Churn Rate", "Refund Rate", "Subscription Retention", "Subscription Status"],
-            "🧪 Trials": ["Active Trials", "Trial Movement", "New Trials", "Trial Conversion Rate"],
-            "💎 Lifetime Value": ["LTV per Customer", "LTV per Paying Customer"],
-            "🔄 Conversion": ["Conversion to Paying", "Cohort Explorer"],
+            "💰 Revenue": ["Revenue", "MRR", "MRR Movement"],
+            "👥 Subscribers": ["Active Subscriptions", "New Paid Subscriptions", "New Customers", "Active Customers"],
+            "📉 Health": ["Churn Rate", "Refund Rate"],
         }
 
         cols = st.columns(3)
@@ -144,7 +141,13 @@ def _run_analysis(
     from rc_insights.analyzer import SubscriptionAnalyzer
     from rc_insights.models import Resolution
 
-    res_map = {"day": Resolution.DAY, "week": Resolution.WEEK, "month": Resolution.MONTH}
+    res_map = {
+        "day": Resolution.DAY,
+        "week": Resolution.WEEK,
+        "month": Resolution.MONTH,
+        "quarter": Resolution.QUARTER,
+        "year": Resolution.YEAR,
+    }
     res = res_map.get(resolution, Resolution.DAY)
 
     with st.spinner("🔍 Fetching metrics from RevenueCat..."):

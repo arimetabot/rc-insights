@@ -50,7 +50,7 @@ def _get_config(
 @app.command()
 def report(
     days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
-    resolution: str = typer.Option("day", "--resolution", "-r", help="Time resolution: day, week, month"),
+    resolution: str = typer.Option("day", "--resolution", "-r", help="Time resolution: day, week, month, quarter, year"),
     output: str = typer.Option("./reports", "--output", "-o", help="Output directory"),
     format: str = typer.Option("all", "--format", "-f", help="Output format: md, html, all"),
     no_ai: bool = typer.Option(False, "--no-ai", help="Skip AI analysis, use heuristics only"),
@@ -60,8 +60,17 @@ def report(
     """📊 Generate a subscription health report."""
     api_key, project_id, openai_key = _get_config(api_key, project_id)
 
-    res_map = {"day": Resolution.DAY, "week": Resolution.WEEK, "month": Resolution.MONTH}
-    res = res_map.get(resolution, Resolution.DAY)
+    res_map = {
+        "day": Resolution.DAY,
+        "week": Resolution.WEEK,
+        "month": Resolution.MONTH,
+        "quarter": Resolution.QUARTER,
+        "year": Resolution.YEAR,
+    }
+    if resolution not in res_map:
+        console.print(f"[red]Invalid resolution '{resolution}'.[/red] Choose from: {', '.join(res_map)}")
+        raise typer.Exit(1)
+    res = res_map[resolution]
 
     with console.status("[bold blue]Analyzing your subscription metrics...[/bold blue]"):
         try:
@@ -165,15 +174,24 @@ def overview(
 def chart(
     name: str = typer.Argument(help="Chart name (e.g., mrr, revenue, churn)"),
     days: int = typer.Option(30, "--days", "-d", help="Number of days"),
-    resolution: str = typer.Option("day", "--resolution", "-r", help="Resolution: day, week, month"),
+    resolution: str = typer.Option("day", "--resolution", "-r", help="Resolution: day, week, month, quarter, year"),
     api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
     project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
 ) -> None:
     """📈 Fetch and display a specific chart."""
     api_key, project_id, _ = _get_config(api_key, project_id)
 
-    res_map = {"day": Resolution.DAY, "week": Resolution.WEEK, "month": Resolution.MONTH}
-    res = res_map.get(resolution, Resolution.DAY)
+    res_map = {
+        "day": Resolution.DAY,
+        "week": Resolution.WEEK,
+        "month": Resolution.MONTH,
+        "quarter": Resolution.QUARTER,
+        "year": Resolution.YEAR,
+    }
+    if resolution not in res_map:
+        console.print(f"[red]Invalid resolution '{resolution}'.[/red] Choose from: {', '.join(res_map)}")
+        raise typer.Exit(1)
+    res = res_map[resolution]
 
     from datetime import date, timedelta
 

@@ -8,14 +8,15 @@ import pytest
 
 from rc_insights.analyzer import SubscriptionAnalyzer
 from rc_insights.client import AuthenticationError, ChartsClientError
-from rc_insights.models import ChartData, OverviewMetric, OverviewMetrics
+from rc_insights.models import ChartData, OverviewMetrics
 
 # ---------------------------------------------------------------------------
-# Test fixtures / helpers
+# Module-level helpers (kept for internal use; shared versions live in conftest)
 # ---------------------------------------------------------------------------
 
 
 def _make_analyzer() -> SubscriptionAnalyzer:
+    """Return a throw-away analyzer pointed at a fake test project."""
     return SubscriptionAnalyzer(rc_api_key="sk_test", rc_project_id="proj_test")
 
 
@@ -24,6 +25,9 @@ def _make_overview(
     churn_rate: float = 3.0,
     active_subscribers: float = 500.0,
 ) -> OverviewMetrics:
+    """Build a minimal OverviewMetrics for test assertions."""
+    from rc_insights.models import OverviewMetric
+
     return OverviewMetrics(
         metrics=[
             OverviewMetric(
@@ -49,7 +53,7 @@ def _make_chart(
     end_val: float = 110.0,
     n_points: int = 30,
 ) -> ChartData:
-    """Create a chart with a linear trend from start_val to end_val."""
+    """Create a chart with a linear trend from *start_val* to *end_val*."""
     values = []
     for i in range(n_points):
         ts = 1704067200000 + (i * 86_400_000)  # 1-day intervals
@@ -287,3 +291,55 @@ class TestGenerateReportErrors:
         # Should have fallen back to heuristics
         assert 0.0 <= score <= 100.0
         assert len(summary) > 0
+
+
+# ---------------------------------------------------------------------------
+# Fixture-injected tests (use shared conftest fixtures)
+# ---------------------------------------------------------------------------
+
+
+class TestSharedFixtures:
+    """Smoke-test the conftest fixtures to ensure they produce valid objects."""
+
+    def test_make_overview_fixture_defaults(self, make_overview) -> None:
+        """make_overview() returns OverviewMetrics with expected default metrics."""
+        ov = make_overview()
+        assert ov.mrr == 5000.0
+        assert ov.churn_rate == 3.0
+        assert ov.active_subscribers == 500.0
+
+    def test_make_overview_fixture_custom_values(self, make_overview) -> None:
+        """make_overview() respects keyword arguments."""
+        ov = make_overview(mrr=9999.0, churn_rate=1.5)
+        assert ov.mrr == 9999.0
+        assert ov.churn_rate == 1.5
+
+    def test_make_chart_fixture_returns_chartdata(self, make_chart) -> None:
+        """make_chart() returns a ChartData with the correct number of data points."""
+        chart = make_chart("MRR", start_val=100.0, end_val=200.0, n_points=10)
+        assert chart.display_name == "MRR"
+        points = chart.data_points
+        assert len(points) == 10
+        # First value should equal start_val
+        assert abs(points[0][1] - 100.0) < 0.01
+        # Last value should equal end_val
+        assert abs(points[-1][1] - 200.0) < 0.01
+
+    def test_make_analyzer_fixture_returns_analyzer(self, make_analyzer) -> None:
+        """make_analyzer() returns a SubscriptionAnalyzer wired to test credentials."""
+        analyzer = make_analyzer()
+        assert analyzer.client is not None
+        analyzer.close()
+
+    def test_fixture_analyzer_runs_heuristics(
+        self, make_analyzer, make_overview, make_chart
+    ) -> None:
+        """Fixture-built objects work end-to-end with heuristic analysis."""
+        analyzer = make_analyzer()
+        overview = make_overview(mrr=8000.0, churn_rate=4.0)
+        charts = {"mrr": make_chart("MRR", start_val=7000.0, end_val=8000.0)}
+        score, summary, insights = analyzer._analyze_with_heuristics(overview, charts)
+        assert 0.0 <= score <= 100.0
+        assert len(summary) > 0
+        assert len(insights) > 0
+        analyzer.close()

@@ -95,34 +95,17 @@ def render_markdown(report: HealthReport) -> str:
                 lines.append("")
 
     # Chart Summaries
-    if report.charts_data:
+    summaries = report.chart_summaries
+    if summaries:
         lines.append("## 📈 Charts Summary")
         lines.append("")
         lines.append("| Chart | Latest | Min | Max | Trend |")
         lines.append("|-------|--------|-----|-----|-------|")
 
-        for _name, chart in report.charts_data.items():
-            points = chart.data_points
-            values = [v for _, v in points if v is not None]
-            if not values:
-                continue
-
-            latest = f"{values[-1]:,.2f}"
-            vmin = f"{min(values):,.2f}"
-            vmax = f"{max(values):,.2f}"
-
-            if len(values) >= 7:
-                first = sum(values[:7]) / 7
-                last = sum(values[-7:]) / 7
-                if first > 0:
-                    change = ((last - first) / first) * 100
-                    trend = f"{'📈' if change > 2 else '📉' if change < -2 else '➡️'} {change:+.1f}%"
-                else:
-                    trend = "➡️ N/A"
-            else:
-                trend = "—"
-
-            lines.append(f"| {chart.display_name} | {latest} | {vmin} | {vmax} | {trend} |")
+        for row in summaries:
+            lines.append(
+                f"| {row['name']} | {row['latest']} | {row['vmin']} | {row['vmax']} | {row['trend']} |"
+            )
 
         lines.append("")
 
@@ -137,7 +120,7 @@ def render_markdown(report: HealthReport) -> str:
 
 
 HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -322,6 +305,27 @@ a:hover { text-decoration: underline; }
     <div class="insight-rec">💡 {{ insight.recommendation }}</div>
 </div>
 {% endfor %}
+{% endif %}
+
+{% set summaries = report.chart_summaries %}
+{% if summaries %}
+<h2>📈 Charts Summary</h2>
+<table>
+    <thead>
+        <tr><th>Chart</th><th>Latest</th><th>Min</th><th>Max</th><th>Trend</th></tr>
+    </thead>
+    <tbody>
+        {% for row in summaries %}
+        <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.latest }}</td>
+            <td>{{ row.vmin }}</td>
+            <td>{{ row.vmax }}</td>
+            <td>{{ row.trend }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endif %}
 
 <footer>
