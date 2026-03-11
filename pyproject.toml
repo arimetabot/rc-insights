@@ -1,0 +1,75 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rc-insights"
+version = "0.1.0"
+description = "AI-powered subscription analytics agent for RevenueCat's Charts API"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Jon Lebron" },
+]
+keywords = ["revenuecat", "subscription", "analytics", "ai", "agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "httpx>=0.27",
+    "rich>=13.0",
+    "typer>=0.12",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "openai>=1.0",
+    "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+web = [
+    "streamlit>=1.30",
+    "plotly>=5.18",
+    "pandas>=2.0",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.3",
+]
+
+[project.scripts]
+rc-insights = "rc_insights.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/jonlebron/rc-insights"
+Documentation = "https://github.com/jonlebron/rc-insights#readme"
+Repository = "https://github.com/jonlebron/rc-insights"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# HTML/CSS template strings and Jinja2 in Python can't be meaningfully split
+"rc_insights/report.py" = ["E501"]
+# LLM system prompt text must remain on long lines for readability
+"rc_insights/analyzer.py" = ["E501"]
+# Typer option help strings can't be split across lines
+"rc_insights/cli.py" = ["E501", "B904"]
+# Streamlit UI layout strings
+"app.py" = ["E501", "B904"]

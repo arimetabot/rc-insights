@@ -1,0 +1,270 @@
+"""RC Insights CLI — AI-powered subscription analytics from your terminal."""
+
+from __future__ import annotations
+
+import os
+
+import typer
+from dotenv import load_dotenv
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+from rc_insights.analyzer import SubscriptionAnalyzer
+from rc_insights.client import ChartsClient, ChartsClientError
+from rc_insights.models import Resolution
+from rc_insights.report import save_report
+
+load_dotenv()
+
+app = typer.Typer(
+    name="rc-insights",
+    help="🧠 AI-powered subscription analytics for RevenueCat",
+    add_completion=False,
+)
+console = Console()
+
+
+def _get_config(
+    api_key_arg: str | None = None,
+    project_id_arg: str | None = None,
+) -> tuple[str, str, str | None]:
+    """Get API keys from CLI args, environment, or .env file."""
+    api_key = api_key_arg or os.getenv("RC_API_KEY", "")
+    project_id = project_id_arg or os.getenv("RC_PROJECT_ID", "")
+    openai_key = os.getenv("OPENAI_API_KEY")
+
+    if not api_key:
+        console.print("[red]Missing RC_API_KEY environment variable[/red]")
+        console.print("Set it: export RC_API_KEY=sk_your_key_here")
+        raise typer.Exit(1)
+
+    if not project_id:
+        console.print("[red]Missing RC_PROJECT_ID environment variable[/red]")
+        console.print("Set it: export RC_PROJECT_ID=proj1ab2c3d4")
+        raise typer.Exit(1)
+
+    return api_key, project_id, openai_key
+
+
+@app.command()
+def report(
+    days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
+    resolution: str = typer.Option("day", "--resolution", "-r", help="Time resolution: day, week, month"),
+    output: str = typer.Option("./reports", "--output", "-o", help="Output directory"),
+    format: str = typer.Option("all", "--format", "-f", help="Output format: md, html, all"),
+    no_ai: bool = typer.Option(False, "--no-ai", help="Skip AI analysis, use heuristics only"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
+) -> None:
+    """📊 Generate a subscription health report."""
+    api_key, project_id, openai_key = _get_config(api_key, project_id)
+
+    res_map = {"day": Resolution.DAY, "week": Resolution.WEEK, "month": Resolution.MONTH}
+    res = res_map.get(resolution, Resolution.DAY)
+
+    with console.status("[bold blue]Analyzing your subscription metrics...[/bold blue]"):
+        try:
+            analyzer = SubscriptionAnalyzer(
+                rc_api_key=api_key,
+                rc_project_id=project_id,
+                openai_api_key=openai_key if not no_ai else None,
+            )
+            health_report = analyzer.generate_report(
+                days=days,
+                resolution=res,
+                include_ai=not no_ai,
+            )
+            analyzer.close()
+        except ChartsClientError as e:
+            console.print(f"[red]API Error:[/red] {e}")
+            raise typer.Exit(1) from e
+
+    # Display summary
+    score = health_report.overall_health_score
+    if score >= 70:
+        score_color = "green"
+        grade = "Healthy ✅"
+    elif score >= 40:
+        score_color = "yellow"
+        grade = "Mixed ⚠️"
+    else:
+        score_color = "red"
+        grade = "Critical 🚨"
+
+    console.print()
+    console.print(
+        Panel(
+            f"[bold {score_color}]{score:.0f}/100[/bold {score_color}] — {grade}\n\n"
+            f"{health_report.summary}",
+            title="📊 Subscription Health Report",
+            border_style=score_color,
+        )
+    )
+
+    # Show insights
+    if health_report.insights:
+        table = Table(title="🧠 Insights", show_header=True, border_style="dim")
+        table.add_column("", width=2)
+        table.add_column("Issue", style="bold")
+        table.add_column("Metric")
+        table.add_column("Recommendation", style="dim")
+
+        severity_emoji = {"critical": "🔴", "warning": "🟡", "positive": "🟢", "info": "🔵"}
+        for insight in health_report.insights:
+            table.add_row(
+                severity_emoji.get(insight.severity, "·"),
+                insight.title,
+                insight.metric_value or "—",
+                insight.recommendation[:80] + "..."
+                    if len(insight.recommendation) > 80
+                    else insight.recommendation,
+            )
+
+        console.print(table)
+
+    # Save files
+    formats = ["md", "html"] if format == "all" else [format]
+    files = save_report(health_report, output, formats=formats)
+
+    console.print()
+    for f in files:
+        console.print(f"[green]✓[/green] Saved: {f}")
+
+
+@app.command()
+def overview(
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
+) -> None:
+    """📋 Show current overview metrics."""
+    api_key, project_id, _ = _get_config(api_key, project_id)
+
+    with console.status("[bold blue]Fetching overview metrics...[/bold blue]"):
+        try:
+            client = ChartsClient(api_key=api_key, project_id=project_id)
+            metrics = client.get_overview()
+            client.close()
+        except ChartsClientError as e:
+            console.print(f"[red]API Error:[/red] {e}")
+            raise typer.Exit(1) from e
+
+    table = Table(title="📋 Overview Metrics", show_header=True, border_style="blue")
+    table.add_column("Metric", style="bold")
+    table.add_column("Value", justify="right")
+    table.add_column("Unit")
+    table.add_column("Period", style="dim")
+
+    for m in metrics.metrics:
+        table.add_row(m.name, f"{m.value:,.2f}", m.unit, m.period)
+
+    console.print(table)
+
+
+@app.command()
+def chart(
+    name: str = typer.Argument(help="Chart name (e.g., mrr, revenue, churn)"),
+    days: int = typer.Option(30, "--days", "-d", help="Number of days"),
+    resolution: str = typer.Option("day", "--resolution", "-r", help="Resolution: day, week, month"),
+) -> None:
+    """📈 Fetch and display a specific chart."""
+    api_key, project_id, _ = _get_config()
+
+    res_map = {"day": Resolution.DAY, "week": Resolution.WEEK, "month": Resolution.MONTH}
+    res = res_map.get(resolution, Resolution.DAY)
+
+    from datetime import date, timedelta
+
+    end = date.today()
+    start = end - timedelta(days=days)
+
+    with console.status(f"[bold blue]Fetching {name} chart...[/bold blue]"):
+        try:
+            client = ChartsClient(api_key=api_key, project_id=project_id)
+            data = client.get_chart(name, start_date=start, end_date=end, resolution=res)
+            client.close()
+        except ChartsClientError as e:
+            console.print(f"[red]API Error:[/red] {e}")
+            raise typer.Exit(1) from e
+
+    console.print(f"\n[bold]{data.display_name}[/bold]")
+    console.print(f"[dim]{data.description}[/dim]\n")
+
+    points = data.data_points
+    if not points:
+        console.print("[yellow]No data points returned.[/yellow]")
+        return
+
+    table = Table(show_header=True, border_style="blue")
+    table.add_column("Date", style="dim")
+    table.add_column("Value", justify="right")
+
+    for ts, val in points[-20:]:  # Show last 20 points
+        date_str = ts.strftime("%Y-%m-%d") if ts else "—"
+        table.add_row(date_str, f"{val:,.2f}")
+
+    if len(points) > 20:
+        console.print(f"[dim](Showing last 20 of {len(points)} data points)[/dim]")
+
+    console.print(table)
+
+    # Quick stats
+    values = [v for _, v in points if v is not None]
+    if values:
+        console.print(f"\n[dim]Latest: {values[-1]:,.2f} | "
+                      f"Min: {min(values):,.2f} | "
+                      f"Max: {max(values):,.2f} | "
+                      f"Avg: {sum(values)/len(values):,.2f}[/dim]")
+
+
+@app.command(name="charts")
+def list_charts() -> None:
+    """📝 List all available chart types."""
+    table = Table(title="Available Charts", show_header=True, border_style="blue")
+    table.add_column("Name", style="bold")
+    table.add_column("Category")
+
+    # Only charts confirmed working against live API (proj058a6330, Mar 2026)
+    categories = {
+        "Revenue": ["revenue", "mrr", "mrr_movement"],
+        "Subscribers": ["actives", "actives_new", "customers_new", "customers_active"],
+        "Health": ["churn", "refund_rate"],
+    }
+
+    for category, charts in categories.items():
+        for c in charts:
+            table.add_row(c, category)
+
+    console.print(table)
+
+
+@app.command()
+def check() -> None:
+    """🔍 Verify your API key and connection."""
+    api_key, project_id, openai_key = _get_config()
+
+    console.print("[bold]Checking configuration...[/bold]\n")
+
+    # Check RC API
+    console.print(f"  RC API Key: [green]{'*' * 8}{api_key[-6:]}[/green]")
+    console.print(f"  Project ID: [green]{project_id}[/green]")
+
+    try:
+        client = ChartsClient(api_key=api_key, project_id=project_id)
+        overview = client.get_overview()
+        client.close()
+        console.print(f"  RC API:     [green]✓ Connected ({len(overview.metrics)} metrics)[/green]")
+    except Exception as e:
+        console.print(f"  RC API:     [red]✗ {e}[/red]")
+
+    # Check OpenAI
+    if openai_key:
+        console.print("  OpenAI:     [green]✓ Key configured[/green]")
+    else:
+        console.print("  OpenAI:     [yellow]⚠ Not configured (heuristic mode)[/yellow]")
+
+    console.print("\n[dim]All checks complete.[/dim]")
+
+
+if __name__ == "__main__":
+    app()
