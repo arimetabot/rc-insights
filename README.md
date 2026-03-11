@@ -34,13 +34,13 @@ RC Insights is an open-source tool that turns your RevenueCat Charts API data in
 ### 1. Install
 
 ```bash
-pip install git+https://github.com/jonlebron/rc-insights.git
+pip install git+https://github.com/arimetabot/rc-insights.git
 ```
 
 Or clone and install locally:
 
 ```bash
-git clone https://github.com/jonlebron/rc-insights.git
+git clone https://github.com/arimetabot/rc-insights.git
 cd rc-insights
 pip install -e ".[web]"  # Include Streamlit dashboard
 ```
@@ -302,7 +302,7 @@ Each report includes:
 
 ```bash
 # Clone and install dev dependencies
-git clone https://github.com/jonlebron/rc-insights.git
+git clone https://github.com/arimetabot/rc-insights.git
 cd rc-insights
 pip install -e ".[dev,web]"
 

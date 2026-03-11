@@ -45,9 +45,9 @@ dev = [
 rc-insights = "rc_insights.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/jonlebron/rc-insights"
-Documentation = "https://github.com/jonlebron/rc-insights#readme"
-Repository = "https://github.com/jonlebron/rc-insights"
+Homepage = "https://github.com/arimetabot/rc-insights"
+Documentation = "https://github.com/arimetabot/rc-insights#readme"
+Repository = "https://github.com/arimetabot/rc-insights"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
