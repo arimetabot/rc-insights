@@ -5,6 +5,7 @@ Run: streamlit run app.py
 
 from __future__ import annotations
 
+import html
 import os
 
 import streamlit as st
@@ -191,7 +192,7 @@ def _run_analysis(
 
     st.markdown(
         f'<div style="background: #1a1d27; padding: 1rem; border-radius: 8px; '
-        f'border-left: 4px solid #6366f1; margin: 1rem 0;">{report.summary}</div>',
+        f'border-left: 4px solid #6366f1; margin: 1rem 0;">{html.escape(report.summary)}</div>',
         unsafe_allow_html=True,
     )
 
@@ -223,10 +224,10 @@ def _run_analysis(
 
             st.markdown(
                 f'<div class="insight-card {css_class}">'
-                f'<strong>{emoji} {insight.title}{metric}{trend}</strong><br>'
-                f'<span style="color: #8b8fa3;">{insight.description}</span><br>'
+                f'<strong>{emoji} {html.escape(insight.title)}{html.escape(metric)}{trend}</strong><br>'
+                f'<span style="color: #8b8fa3;">{html.escape(insight.description)}</span><br>'
                 f'<div style="background: #242833; padding: 0.5rem; border-radius: 4px; '
-                f'margin-top: 0.5rem; font-size: 0.9rem;">💡 {insight.recommendation}</div>'
+                f'margin-top: 0.5rem; font-size: 0.9rem;">💡 {html.escape(insight.recommendation)}</div>'
                 f'</div>',
                 unsafe_allow_html=True,
             )

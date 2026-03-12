@@ -338,7 +338,7 @@ a:hover { text-decoration: underline; }
 
 def render_html(report: HealthReport) -> str:
     """Render a health report as a styled HTML page."""
-    env = Environment(loader=BaseLoader())
+    env = Environment(loader=BaseLoader(), autoescape=True)
     template = env.from_string(HTML_TEMPLATE)
     return template.render(report=report)
 

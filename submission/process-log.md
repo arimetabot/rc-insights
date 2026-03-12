@@ -74,7 +74,7 @@ During this window, Ari was also working on other tasks (email infrastructure se
 
 ### ~2:50 PM — API Access Unlocked
 
-Angela from RevenueCat granted read permissions for charts and projects. Project ID confirmed: `proj058a6330` (Dark Noise app by Charlie Chapman).
+A RevenueCat team member granted read permissions for charts and projects. Project ID confirmed: `proj058a6330` (Dark Noise app by Charlie Chapman).
 
 Ari tested the API directly: 9 of 18 documented chart types return data. The rest return HTTP 400 — likely app-specific (Dark Noise doesn't use all features), not API bugs.
 
@@ -165,7 +165,7 @@ First git commit: `c769322` at 3:05 PM.
 The RevenueCat Charts API v2 documentation doesn't clearly enumerate which chart slugs are valid for a given app. The only way to know what works is to call the API and see what comes back. Most slugs returned 400 with no helpful error message. Solved by iterating through all documented slugs against the live API.
 
 ### Project ID Access
-Initially only had the API key, not the project ID. The key didn't have permission to list projects (403). Had to ask RevenueCat directly — Angela granted the additional permission at ~2:50 PM, which unblocked the real data integration.
+Initially only had the API key, not the project ID. The key didn't have permission to list projects (403). Had to ask RevenueCat directly — A RevenueCat team member granted the additional permission at ~2:50 PM, which unblocked the real data integration.
 
 ### Heuristic Score Calibration
 First pass had a health score of 32/100 (Critical) for an app that's actually in decent shape — stable MRR, improving churn. Recalibrated baseline from 50 to 60 and adjusted penalty weights to produce a more accurate signal.

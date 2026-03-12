@@ -28,11 +28,17 @@ console = Console()
 def _get_config(
     api_key_arg: str | None = None,
     project_id_arg: str | None = None,
+    llm_key_arg: str | None = None,
 ) -> tuple[str, str, str | None]:
-    """Get API keys from CLI args, environment, or .env file."""
+    """Get API keys from CLI args, environment, or .env file.
+
+    LLM key resolution order: --llm-key arg → LLM_API_KEY env → OPENAI_API_KEY env (backward compat).
+    litellm also reads provider-specific env vars automatically (ANTHROPIC_API_KEY, etc.).
+    """
     api_key = api_key_arg or os.getenv("RC_API_KEY", "")
     project_id = project_id_arg or os.getenv("RC_PROJECT_ID", "")
-    openai_key = os.getenv("OPENAI_API_KEY")
+    # LLM_API_KEY is universal; OPENAI_API_KEY is kept for backward compat
+    llm_key = llm_key_arg or os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY")
 
     if not api_key:
         console.print("[red]Missing RC_API_KEY environment variable[/red]")
@@ -44,7 +50,7 @@ def _get_config(
         console.print("Set it: export RC_PROJECT_ID=proj1ab2c3d4")
         raise typer.Exit(1)
 
-    return api_key, project_id, openai_key
+    return api_key, project_id, llm_key
 
 
 @app.command()
@@ -54,11 +60,13 @@ def report(
     output: str = typer.Option("./reports", "--output", "-o", help="Output directory"),
     format: str = typer.Option("all", "--format", "-f", help="Output format: md, html, all"),
     no_ai: bool = typer.Option(False, "--no-ai", help="Skip AI analysis, use heuristics only"),
+    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model string (e.g. gpt-4o-mini, claude-sonnet-4-5, ollama/llama3, groq/llama-3.1-70b)"),
+    llm_key: str | None = typer.Option(None, "--llm-key", help="LLM API key override (also reads LLM_API_KEY or OPENAI_API_KEY from env)"),
     api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
     project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
 ) -> None:
     """📊 Generate a subscription health report."""
-    api_key, project_id, openai_key = _get_config(api_key, project_id)
+    api_key, project_id, resolved_llm_key = _get_config(api_key, project_id, llm_key)
 
     res_map = {
         "day": Resolution.DAY,
@@ -77,7 +85,8 @@ def report(
             analyzer = SubscriptionAnalyzer(
                 rc_api_key=api_key,
                 rc_project_id=project_id,
-                openai_api_key=openai_key if not no_ai else None,
+                llm_api_key=resolved_llm_key if not no_ai else None,
+                llm_model=model,
             )
             health_report = analyzer.generate_report(
                 days=days,
@@ -269,7 +278,7 @@ def check(
     console.print("[bold]Checking configuration...[/bold]\n")
 
     # Check RC API
-    console.print(f"  RC API Key: [green]{'*' * 8}{api_key[-6:]}[/green]")
+    console.print(f"  RC API Key: [green]{'*' * 8}{api_key[-4:]}[/green]")
     console.print(f"  Project ID: [green]{project_id}[/green]")
 
     try:

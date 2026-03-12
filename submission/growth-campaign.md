@@ -99,7 +99,7 @@ the tool is functional and might be useful to the community regardless.
 
 **Why second:** 100% intent match. Everyone here is a RevenueCat user. The community is smaller but conversion rate to installs will be the highest of any channel. Free.
 
-**Account:** Register at community.revenuecat.com with `jonathan.lebron@outlook.com`. Post in the "Community Showcase" or "Tools & Integrations" category.
+**Account:** Register at community.revenuecat.com with `your-email@example.com`. Post in the "Community Showcase" or "Tools & Integrations" category.
 
 **When to post:** Thursday morning EST (after HN has settled, before the weekend). This lets us reference HN traction ("it got some love on HN") as social proof.
 

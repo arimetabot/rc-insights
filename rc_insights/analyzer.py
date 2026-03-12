@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import date, timedelta
 from typing import Any
 
@@ -94,15 +95,32 @@ Provide 5-8 insights, prioritized by impact. Always include at least one actiona
 class SubscriptionAnalyzer:
     """AI-powered subscription analytics engine.
 
-    Connects to RevenueCat Charts API, pulls data, and uses an LLM
-    to generate actionable insights and health reports.
+    Connects to RevenueCat Charts API, pulls data, and uses any LLM
+    (via litellm) to generate actionable insights and health reports.
+    Supports OpenAI, Anthropic, Ollama, Groq, Mistral, Azure, and 100+ others.
 
     Usage:
+        # OpenAI (default)
         analyzer = SubscriptionAnalyzer(
             rc_api_key="sk_...",
             rc_project_id="proj...",
-            openai_api_key="sk-...",  # Optional: for AI insights
+            llm_api_key="sk-...",        # or set OPENAI_API_KEY env var
         )
+
+        # Anthropic Claude
+        analyzer = SubscriptionAnalyzer(
+            rc_api_key="sk_...",
+            rc_project_id="proj...",
+            llm_model="claude-sonnet-4-5",  # or any litellm model string
+        )
+
+        # Ollama (local, no key needed)
+        analyzer = SubscriptionAnalyzer(
+            rc_api_key="sk_...",
+            rc_project_id="proj...",
+            llm_model="ollama/llama3",
+        )
+
         report = analyzer.generate_report()
         print(report.summary)
     """
@@ -112,52 +130,74 @@ class SubscriptionAnalyzer:
         rc_api_key: str,
         rc_project_id: str,
         *,
-        openai_api_key: str | None = None,
-        openai_model: str = "gpt-4o-mini",
+        openai_api_key: str | None = None,   # Deprecated: use llm_api_key
+        openai_model: str = "gpt-4o-mini",   # Deprecated: use llm_model
+        llm_api_key: str | None = None,
+        llm_model: str | None = None,
     ) -> None:
         self.client = ChartsClient(api_key=rc_api_key, project_id=rc_project_id)
         self.project_id = rc_project_id
-        self.openai_api_key = openai_api_key
-        self.openai_model = openai_model
+        # llm_api_key takes precedence; fall back to openai_api_key for backward compat
+        self.llm_api_key = llm_api_key or openai_api_key
+        # llm_model takes precedence; fall back to openai_model for backward compat
+        self.llm_model = llm_model or openai_model
+        # Backward compat attributes so existing code referencing .openai_api_key still works
+        self.openai_api_key = self.llm_api_key
+        self.openai_model = self.llm_model
 
     def _analyze_with_ai(
         self,
         overview: OverviewMetrics | None,
         charts: dict[str, ChartData],
     ) -> tuple[float, str, list[Insight]]:
-        """Use LLM to analyze metrics and generate insights."""
-        if not self.openai_api_key:
-            return self._analyze_with_heuristics(overview, charts)
+        """Use any LLM (via litellm) to analyze metrics and generate insights.
 
+        Supports OpenAI, Anthropic, Ollama, Groq, Mistral, Azure, and 100+ providers.
+        Falls back to heuristic analysis if litellm is not installed or the call fails.
+        """
         try:
-            from openai import OpenAI
+            import litellm  # lazy import — graceful fallback if not installed
 
-            client = OpenAI(api_key=self.openai_api_key)
             metrics_text = _format_metrics_for_llm(overview, charts)
-
-            response = client.chat.completions.create(
-                model=self.openai_model,
-                messages=[
-                    {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
-                    {
-                        "role": "user",
-                        "content": f"Analyze these subscription metrics:\n\n{metrics_text}",
-                    },
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.3,
-            )
-
-            result = json.loads(response.choices[0].message.content or "{}")
-
-            insights = [
-                Insight.model_validate(i) for i in result.get("insights", [])
+            messages: list[dict[str, str]] = [
+                {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": f"Analyze these subscription metrics:\n\n{metrics_text}",
+                },
             ]
+            kwargs: dict[str, Any] = {
+                "model": self.llm_model,
+                "messages": messages,
+                "temperature": 0.3,
+            }
+            if self.llm_api_key:
+                kwargs["api_key"] = self.llm_api_key
+
+            # Try with JSON mode first; some models don't support response_format
+            try:
+                response = litellm.completion(**kwargs, response_format={"type": "json_object"})
+            except Exception:
+                # Retry without response_format — parse JSON from raw text instead
+                response = litellm.completion(**kwargs)
+
+            content = response.choices[0].message.content or "{}"
+
+            # Extract JSON even if the model wrapped it in markdown code blocks
+            json_match = re.search(r"\{.*\}", content, re.DOTALL)
+            if json_match:
+                content = json_match.group(0)
+
+            result = json.loads(content)
+            insights = [Insight.model_validate(i) for i in result.get("insights", [])]
             health_score = float(result.get("overall_health_score", 50))
             summary = result.get("summary", "Analysis complete.")
 
             return health_score, summary, insights
 
+        except ImportError:
+            logger.warning("litellm not installed, falling back to heuristic analysis")
+            return self._analyze_with_heuristics(overview, charts)
         except Exception as e:
             logger.warning("AI analysis failed, falling back to heuristics: %s", e)
             return self._analyze_with_heuristics(overview, charts)
@@ -534,8 +574,8 @@ class SubscriptionAnalyzer:
         )
         logger.info("Fetched %s charts", len(charts))
 
-        # Analyze
-        if include_ai and self.openai_api_key:
+        # Analyze — litellm reads provider API keys from env vars automatically
+        if include_ai:
             health_score, summary, insights = self._analyze_with_ai(overview, charts)
         else:
             health_score, summary, insights = self._analyze_with_heuristics(
