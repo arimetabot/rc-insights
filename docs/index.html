@@ -14,13 +14,18 @@
   <meta name="twitter:title" content="RC Insights — AI-Powered Subscription Analytics">
   <meta name="twitter:description" content="One command. Real data. Actionable insights for your RevenueCat app.">
 
-  <!-- Google Fonts -->
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+
+  <!-- Google Fonts — async load to avoid render-blocking -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
 
-  <!-- Prism.js for syntax highlighting -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <!-- Prism.js CSS — async load to avoid render-blocking -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"></noscript>
 
   <style>
     /* =========================================
@@ -36,7 +41,7 @@
       --border:    #1E2D45;
       --border2:   #253348;
       --text:      #E2E8F0;
-      --text-muted:#64748B;
+      --text-muted:#8494A7;
       --text-dim:  #94A3B8;
       --green:     #4ADE80;
       --green-dim: #166534;
@@ -1313,6 +1318,7 @@
 <!-- =============================================
      HERO
 ============================================= -->
+<main>
 <section id="hero">
   <div class="container">
     <div class="hero-badge">Open Source · RevenueCat Charts API v2</div>
@@ -2208,6 +2214,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 <!-- =============================================
      FOOTER
 ============================================= -->
+</main>
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
@@ -2253,10 +2260,10 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 </footer>
 
 <!-- Prism.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
 
 <script>
   // Smooth scroll for nav links
