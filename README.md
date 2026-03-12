@@ -347,4 +347,4 @@ This tool was built as a take-home project for RevenueCat's Agentic AI Developer
 - [Content Package](submission/content-package.md) — blog post, social media posts
 - [Growth Campaign](submission/growth-campaign.md) — community strategy, budget allocation, measurement plan
 - [Process Log](submission/process-log.md) — how this was built using a multi-agent AI workflow
-- [Video Script](submission/video-script.md) — 2-minute demo walkthrough script
+- [Video Demo](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4) — 2-minute walkthrough with real data
