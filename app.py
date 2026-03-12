@@ -294,10 +294,10 @@ def _run_analysis(
         )
 
     with col2:
-        html = render_html(report)
+        html_output = render_html(report)
         st.download_button(
             "🌐 Download HTML Report",
-            html,
+            html_output,
             file_name="subscription_health_report.html",
             mime="text/html",
         )

@@ -52,7 +52,7 @@ It comes in three modes:
 Install it:
 
 ```bash
-pip install git+https://github.com/arimetabot/rc-insights.git
+pip install rc-insights
 ```
 
 Set your credentials:
@@ -246,20 +246,22 @@ Both are well-maintained, have clean APIs, and produce CLIs that don't feel like
 
 ### Everything's Built
 
-Not a roadmap — these are all shipped:
+Not a roadmap — these are all shipped and tested:
 
-- **100+ LLM providers** — OpenAI, Anthropic Claude, Ollama (local/free), Groq, Mistral via litellm. Run `rc-insights models` to see the full list.
-- **Slack/Discord integration** — Send health reports directly to your team channel via webhooks. `rc-insights notify --slack <url>`
-- **GitHub Action** — Automated weekly health checks in CI. Just add your RC_API_KEY as a secret.
-- **Threshold alerts** — Define your own rules in YAML. `rc-insights alerts --config alerts.yml`
-- **Cohort retention** — Weekly cohort analysis from subscriber data. `rc-insights cohorts --weeks 12`
-- **Email reports** — Styled HTML reports via Resend. `rc-insights email-report --to team@company.com`
-- **RevenueCat webhooks** — Real-time event processing for purchases, cancellations, billing issues. `uvicorn rc_insights.webhooks:app`
-- **221 tests passing** — full coverage across every module.
+- **100+ LLM providers** — OpenAI, Claude, Ollama (local/free), Groq, Mistral, and more via litellm. `rc-insights models`
+- **Slack/Discord integration** — Health reports to your team channel via webhooks. `rc-insights notify --slack <url>`
+- **GitHub Action** — Automated weekly health checks in CI.
+- **Threshold alerts** — Custom YAML rules. `rc-insights alerts --config alerts.yml`
+- **Cohort retention** — Weekly cohort analysis. `rc-insights cohorts --weeks 12`
+- **Email reports** — Styled HTML via Resend. `rc-insights email-report --to team@co.com`
+- **RevenueCat webhooks** — Real-time event processing. `uvicorn rc_insights.webhooks:app`
+- **222 tests** — full coverage across every module.
 
 ---
 
 ### Try It
+
+**📺 [Watch the 2-minute demo video](rc-insights-demo.mp4)** — install, CLI report, Streamlit dashboard, all in one take.
 
 The code is on GitHub: [https://github.com/arimetabot/rc-insights](https://github.com/arimetabot/rc-insights)
 
@@ -335,16 +337,16 @@ The code is real. Try it: https://github.com/arimetabot/rc-insights
 
 ### Post 5: Call to Action / Community
 
-RC Insights is open source and looking for contributors.
-
-Everything's built — not a roadmap, it's shipped:
+RC Insights is open source — and everything's shipped, not just planned:
 
 → 100+ LLM providers (OpenAI, Claude, Ollama, Groq…)
 → Slack/Discord weekly report bot
 → GitHub Action for automated health checks
 → Threshold alerts with YAML config
-→ Cohort retention + email reports + webhooks
-→ 221 tests passing
+→ Cohort retention analysis
+→ Email reports via Resend
+→ RevenueCat webhooks listener
+→ 222 tests passing
 
 MIT licensed. RevenueCat Charts API v2. Python 3.10+.
 

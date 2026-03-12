@@ -137,7 +137,7 @@ a clear answer to "is my subscription business healthy?"
 - 🟡 Refund rate up 18% in the last two weeks — investigate recent updates
 
 **Installation:**
-  pip install git+https://github.com/arimetabot/rc-insights.git
+  pip install rc-insights
   rc-insights report --days 30
 
 It's open-source and free. GitHub: https://github.com/arimetabot/rc-insights
@@ -198,7 +198,7 @@ query them programmatically and get a cross-metric picture of your subscription 
 
 **Quick start:**
 ```bash
-pip install git+https://github.com/arimetabot/rc-insights.git
+pip install rc-insights
 export RC_API_KEY=sk_your_key
 export RC_PROJECT_ID=proj_your_id
 rc-insights report --days 30

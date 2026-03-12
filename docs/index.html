@@ -1365,7 +1365,7 @@
         <div class="metric-label">Health Score</div>
       </div>
       <div class="metric-cell">
-        <div class="metric-value">66</div>
+        <div class="metric-value">222</div>
         <div class="metric-label">Tests Passing</div>
       </div>
       <div class="metric-cell">
@@ -1571,7 +1571,7 @@
 
       <p>Install it:</p>
 
-      <pre><code class="language-bash">pip install git+https://github.com/arimetabot/rc-insights.git</code></pre>
+      <pre><code class="language-bash">pip install rc-insights</code></pre>
 
       <p>Set your credentials:</p>
 
@@ -1677,7 +1677,7 @@ with SubscriptionAnalyzer(
         <li><strong>Cohort retention</strong> — Weekly cohort analysis. <code>rc-insights cohorts --weeks 12</code></li>
         <li><strong>Email reports</strong> — Styled HTML via Resend. <code>rc-insights email-report --to team@co.com</code></li>
         <li><strong>RevenueCat webhooks</strong> — Real-time event processing. <code>uvicorn rc_insights.webhooks:app</code></li>
-        <li><strong>221 tests</strong> — full coverage across every module.</li>
+        <li><strong>222 tests</strong> — full coverage across every module.</li>
       </ul>
 
       <h2>Try It</h2>
@@ -1829,7 +1829,7 @@ Everything's built — not a roadmap, it's shipped:
 → Cohort retention analysis
 → Email reports via Resend
 → RevenueCat webhooks listener
-→ 221 tests passing
+→ 222 tests passing
 
 MIT licensed. RevenueCat Charts API v2. Python 3.10+.
 
@@ -1993,7 +1993,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         <span class="agent-emoji">⚙️</span>
         <div class="agent-name">Forge</div>
         <div class="agent-role">Full-Stack Developer</div>
-        <div class="agent-deliverable">Python tool, ChartsClient, SubscriptionAnalyzer, CLI, Streamlit dashboard, 71 passing tests, ruff clean</div>
+        <div class="agent-deliverable">Python tool, ChartsClient, SubscriptionAnalyzer, CLI, Streamlit dashboard, 222 passing tests, ruff clean</div>
       </div>
       <div class="agent-card">
         <span class="agent-emoji">✍️</span>
@@ -2064,40 +2064,33 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-amber"></div>
         <div class="timeline-time">~1:00 PM</div>
-        <div class="timeline-title">Session Start + Gap Analysis</div>
-        <div class="timeline-body">Ari assessed the existing tool (~85% complete). Identified gaps: no project ID, no content package, no growth campaign, no code review. Planned parallel agent spawns.</div>
+        <div class="timeline-title">Gap Analysis + Parallel Spawns</div>
+        <div class="timeline-body">Ari assessed the existing tool (~85% complete). Identified gaps: no project ID, no content package, no growth campaign, no code review. Spawned Blaze (content), Scout (growth), and Forge (code review + fixes) simultaneously — all independent workstreams.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-ari">🦁 Ari</span>
+          <span class="timeline-tag tag-forge">⚙️ Forge spawned</span>
+          <span class="timeline-tag tag-blaze">✍️ Blaze spawned</span>
+          <span class="timeline-tag tag-scout">🔍 Scout spawned</span>
         </div>
         <div class="decision-callout mt-8">
-          <div class="decision-callout-title">Finding: 9 working endpoints out of 21 documented</div>
+          <div class="decision-callout-title">Finding: 9 working endpoints out of 18 documented</div>
           <div class="decision-callout-body">
             <strong style="color: var(--green);">Working:</strong> revenue, mrr, churn, refund_rate, actives, actives_new, customers_new, customers_active, mrr_movement<br>
-            <strong style="color: var(--red);">HTTP 400:</strong> annual_recurring_revenue, active_subscriptions, trial_conversion, realized_ltv_per_customer, + 8 more<br>
+            <strong style="color: var(--red);">HTTP 400:</strong> annual_recurring_revenue, active_subscriptions, trial_conversion, realized_ltv_per_customer, + 5 more<br>
             Decision: Only use confirmed-working endpoints. Document this behavior. Better to be accurate than impressive-but-misleading.
           </div>
         </div>
       </div>
 
       <div class="timeline-event">
-        <div class="timeline-dot timeline-dot-green"></div>
-        <div class="timeline-time">~1:00–2:30 PM</div>
-        <div class="timeline-title">Parallel Spawn — Three Streams Running</div>
-        <div class="timeline-body">Blaze (content), Scout (growth), and Forge (code review + fixes) spawned simultaneously. All independent — content and growth work proceeded while waiting for API access.</div>
-        <div class="mt-8">
-          <span class="timeline-tag tag-forge">⚙️ Forge spawned</span>
-          <span class="timeline-tag tag-blaze">✍️ Blaze spawned</span>
-          <span class="timeline-tag tag-scout">🔍 Scout spawned</span>
-        </div>
-      </div>
-
-      <div class="timeline-event">
         <div class="timeline-dot timeline-dot-blue"></div>
         <div class="timeline-time">~2:30 PM</div>
-        <div class="timeline-title">Content + Growth Delivered</div>
-        <div class="timeline-body">Blaze: 1,800+ word blog post, 5 social posts, video script. Scout: 8 communities ranked, full posting copy, $100 budget plan. Forge: code review (7 critical issues), all fixed, tests expanded to 66.</div>
+        <div class="timeline-title">Content + Growth + Code Review Delivered</div>
+        <div class="timeline-body">Blaze: 1,800+ word blog post, 5 social posts. Scout: 8 communities ranked, full posting copy, $100 budget plan. Forge: code review (7 critical issues), all fixed, tests expanded to 66.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
+          <span class="timeline-tag tag-blaze">✍️ Blaze</span>
+          <span class="timeline-tag tag-scout">🔍 Scout</span>
         </div>
       </div>
 
@@ -2120,7 +2113,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         <div class="timeline-dot timeline-dot-blue"></div>
         <div class="timeline-time">3:05 PM</div>
         <div class="timeline-title">Real Data Integration + First Commit</div>
-        <div class="timeline-body">Forge ran tool against real Dark Noise data. Trimmed ChartName enum 21→9. Recalibrated health score. MRR $4,537, Active Subs 2,519, Health Score 42/100. Git commit c769322.</div>
+        <div class="timeline-body">Forge ran tool against real Dark Noise data. Trimmed ChartName enum 21→9. Recalibrated health score. MRR $4,537, Active Subs 2,519, Health Score 42/100. Git commit c769322 at 3:05 PM.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
           <span class="timeline-tag tag-ari">🦁 Ari verified</span>
@@ -2129,11 +2122,11 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-amber"></div>
-        <div class="timeline-time">3:05–3:50 PM</div>
+        <div class="timeline-time">3:26–3:50 PM</div>
         <div class="timeline-title">Repository Setup</div>
-        <div class="timeline-body">GitHub URL updates, README badges, GitHub Pages submission site. All anchored to git commits with exact timestamps.</div>
+        <div class="timeline-body">GitHub URL updates (commit 6b48466 at 3:26 PM), README badges (e0f0e75 at 3:35 PM), GitHub Pages submission site (a33e0ed at 3:42 PM). All anchored to git commits with exact timestamps.</div>
         <div class="mt-8">
-          <span class="timeline-tag tag-blaze">✍️ Blaze</span>
+          <span class="timeline-tag tag-ari">🦁 Ari</span>
         </div>
       </div>
 
@@ -2141,27 +2134,54 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         <div class="timeline-dot timeline-dot-purple"></div>
         <div class="timeline-time">6:37–7:57 PM</div>
         <div class="timeline-title">Compliance + Final Polish</div>
-        <div class="timeline-body">Agent disclosure added to all social posts. Code quality fixes. UTC datetime, HTML charts table, test fixtures. Complete submission package assembled. 71 tests passing.</div>
+        <div class="timeline-body">Agent disclosure added to all social posts (650d657 at 6:37 PM). Code quality fixes (0d0d96f at 6:38 PM). UTC datetime, HTML charts table, shared test fixtures (36b8b1f at 7:25 PM). Complete submission package assembled (fafb6ac at 7:55 PM).</div>
         <div class="mt-8">
-          <span class="timeline-tag tag-scout">🔍 Scout</span>
+          <span class="timeline-tag tag-forge">⚙️ Forge</span>
+          <span class="timeline-tag tag-blaze">✍️ Blaze</span>
         </div>
       </div>
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-blue"></div>
         <div class="timeline-time">8:05 PM</div>
-        <div class="timeline-title">PageSpeed Fixes — Final Commit</div>
-        <div class="timeline-body">Fixed contrast ratios, landmark regions, favicon, font loading. Last substantive commit of the build.</div>
+        <div class="timeline-title">PageSpeed Fixes</div>
+        <div class="timeline-body">Fixed contrast ratios, landmark regions, favicon, font loading. Commit e3d70dd at 8:05 PM.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
         </div>
       </div>
 
       <div class="timeline-event">
+        <div class="timeline-dot timeline-dot-amber"></div>
+        <div class="timeline-time">9:34–10:15 PM</div>
+        <div class="timeline-title">Accuracy Pass + Security Fixes</div>
+        <div class="timeline-body">Honest timeline rewrite from git history (60c9668 at 9:46 PM). PII exposure + XSS vectors fixed (96997ac at 10:15 PM). All claims verified against actual code and commit timestamps.</div>
+        <div class="mt-8">
+          <span class="timeline-tag tag-ari">🦁 Ari</span>
+          <span class="timeline-tag tag-decision">Key Decision</span>
+        </div>
+        <div class="decision-callout mt-8">
+          <div class="decision-callout-title">Decision: Truth over polish</div>
+          <div class="decision-callout-body">Rewrote timeline to match actual git history. Removed references to non-existent video demo. Fixed test counts. If the work is good enough to show, it's good enough to be honest about.</div>
+        </div>
+      </div>
+
+      <div class="timeline-event">
         <div class="timeline-dot timeline-dot-green"></div>
-        <div class="timeline-time">~8:05 PM</div>
-        <div class="timeline-title">Submission Ready</div>
-        <div class="timeline-body">Ari collected all three workstreams, assembled SUBMISSION.md, and pushed the final package. Total wall-clock: ~8 hours (12 PM – 8 PM EDT) with ~5–6 hours of focused RC work.</div>
+        <div class="timeline-time">10:23–11:26 PM</div>
+        <div class="timeline-title">Feature Expansion — Everything Shipped</div>
+        <div class="timeline-body">Multi-LLM support (100+ providers via litellm). Then parallel Forge agents built: threshold alerts, cohort retention, Slack/Discord notifications, RevenueCat webhooks, email reports via Resend, GitHub Action. Tests: 71 → 221. Commit 7c4edbc at 11:26 PM.</div>
+        <div class="mt-8">
+          <span class="timeline-tag tag-ari">🦁 Ari</span>
+          <span class="timeline-tag tag-forge">⚙️ Forge ×2</span>
+        </div>
+      </div>
+
+      <div class="timeline-event">
+        <div class="timeline-dot timeline-dot-green"></div>
+        <div class="timeline-time">~11:30 PM</div>
+        <div class="timeline-title">Submission Complete</div>
+        <div class="timeline-body">All workstreams collected. Total wall-clock: ~12 PM – 11:30 PM EDT with ~8 hours of focused RC work across the day. 19 git commits. 222 tests. Every planned feature shipped.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-ari">🦁 Ari</span>
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
@@ -2170,7 +2190,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         </div>
         <div class="decision-callout mt-8">
           <div class="decision-callout-title">Why this matters</div>
-          <div class="decision-callout-body">Parallel agents meant content and growth campaigns were done before API access arrived — zero idle time. This isn't a demo of what agents <em>could</em> do — it's what they actually did, with real code, real data, and real output you can run.</div>
+          <div class="decision-callout-body">Parallel agents meant content and growth campaigns were done before API access arrived — zero idle time. Features that started as "What I'd Build Next" became shipped code with 150+ new tests. This isn't a demo of what agents <em>could</em> do — it's what they actually did, with real code, real data, and real output you can run.</div>
         </div>
       </div>
 

@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776ab.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/tests-221%20passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-222%20passing-brightgreen.svg)]()
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![RevenueCat Charts API v2](https://img.shields.io/badge/RevenueCat-Charts%20API%20v2-ff6b6b.svg)](https://www.revenuecat.com/docs/api-v2)
 
@@ -43,7 +43,7 @@ RC Insights is an open-source tool that turns your RevenueCat Charts API data in
 ### 1. Install
 
 ```bash
-pip install git+https://github.com/arimetabot/rc-insights.git
+pip install rc-insights
 ```
 
 Or clone and install locally:

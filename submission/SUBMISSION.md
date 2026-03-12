@@ -23,7 +23,7 @@ RC Insights connects to RevenueCat's Charts API v2, pulls your subscription data
 
 **Tech stack:** Python · Pydantic · Typer · Rich · Streamlit · httpx · OpenAI · Jinja2
 
-**Tests:** 71 passing (pytest) | **Linting:** ruff ✅
+**Tests:** 222 passing (pytest) | **Linting:** ruff ✅
 
 ---
 
@@ -163,9 +163,7 @@ See: [`content-package.md`](content-package.md)
 1,800+ words covering: the data→insight gap, tool architecture, heuristic vs. AI analysis, health score design, getting started in 60 seconds.
 
 #### Video Tutorial (~2 min)
-📹 [Watch the demo](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4) (also embedded on the [submission site](https://arimetabot.github.io/rc-insights/))
-
-Script: [`video-script.md`](video-script.md)
+See: [`content/video-script.md`](content/video-script.md)
 
 Full script for a ~2-minute screen recording walkthrough: install → CLI report → Streamlit dashboard → Python library.
 

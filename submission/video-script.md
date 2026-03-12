@@ -24,7 +24,7 @@
 
 **TYPE:**
 ```
-pip install git+https://github.com/arimetabot/rc-insights.git
+pip install rc-insights
 ```
 
 "...set your API key and project ID..."
