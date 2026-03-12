@@ -377,11 +377,11 @@ pytest
 
 Contributions welcome! Some ideas:
 
-- **More AI providers** — Anthropic Claude, local LLMs via Ollama
 - **Slack/Discord integration** — Weekly report bot
 - **GitHub Action** — Automated health checks in CI
-- **More chart analysis** — Deeper cohort and retention analysis
+- **Cohort analysis** — Retention tracking by signup week
 - **Alerting** — Threshold-based notifications
+- **RevenueCat Webhooks** — Real-time event processing
 
 ---
 

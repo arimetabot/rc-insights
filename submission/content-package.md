@@ -249,9 +249,9 @@ Both are well-maintained, have clean APIs, and produce CLIs that don't feel like
 A few things didn't make it in:
 
 - **Slack/Discord integration** — Post weekly health reports to a channel. Most indie devs would actually use this.
-- **Anthropic Claude support** — The analyzer is designed to swap LLM providers. Claude would be a natural addition.
 - **GitHub Action** — Run a health check on every deploy. If churn spikes after a release, you want to know fast.
 - **Threshold alerts** — Define your own thresholds (`if churn > 8%, send alert`). Currently the rules are hardcoded.
+- **Cohort analysis** — Track retention by signup week to catch long-term trends the monthly view misses.
 
 ---
 
@@ -333,11 +333,13 @@ The code is real. Try it: https://github.com/arimetabot/rc-insights
 
 RC Insights is open source and looking for contributors.
 
+Already supports 100+ LLMs (OpenAI, Claude, Ollama, Groq…)
+
 Top wanted:
 → Slack/Discord weekly report bot
 → GitHub Action for deploy health checks  
-→ Anthropic Claude support (the analyzer is plug-and-play)
 → Threshold-based alerts
+→ Cohort retention analysis
 
 MIT licensed. RevenueCat Charts API v2. Python 3.10+.
 
