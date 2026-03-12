@@ -194,7 +194,7 @@ Each sub-agent had:
 - No knowledge of the other agents' work
 - A defined output format for easy integration
 
-This is the same architecture used in production at Basecamp Labs for content pipelines, trading systems, and client work.
+This is the same architecture I use in production for content pipelines, trading systems, and client work.
 
 ---
 
