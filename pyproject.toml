@@ -28,6 +28,7 @@ dependencies = [
     "python-dotenv>=1.0",
     "litellm>=1.30",
     "jinja2>=3.1",
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]
@@ -35,6 +36,10 @@ openai = ["openai>=1.0"]
 anthropic = ["anthropic>=0.25"]
 ollama = []  # litellm handles Ollama natively — just run `ollama serve`
 all-llms = ["openai>=1.0", "anthropic>=0.25"]
+email = []  # Uses httpx (already included) to call Resend API directly
+slack = []  # httpx already included
+discord = []  # httpx already included
+webhooks = ["fastapi>=0.100", "uvicorn>=0.20"]
 web = [
     "streamlit>=1.30",
     "plotly>=5.18",
@@ -78,3 +83,18 @@ select = ["E", "F", "I", "N", "W", "UP", "B"]
 "rc_insights/cli.py" = ["E501", "B904"]
 # Streamlit UI layout strings
 "app.py" = ["E501", "B904"]
+# HTML email template strings
+"rc_insights/emails.py" = ["E501"]
+# Notification payload formatting
+"rc_insights/notifications.py" = ["E501"]
+# Webhook processing
+"rc_insights/webhooks.py" = ["E501"]
+# Alert/cohort CLI commands
+"rc_insights/alerts.py" = ["E501"]
+"rc_insights/cohort.py" = ["E501"]
+# Test assertions
+"tests/test_notifications.py" = ["E501"]
+"tests/test_webhooks.py" = ["E501"]
+"tests/test_alerts.py" = ["E501"]
+"tests/test_cohort.py" = ["E501"]
+"tests/test_emails.py" = ["E501"]

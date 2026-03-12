@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from datetime import date, timedelta
 
 import typer
 from dotenv import load_dotenv
@@ -10,8 +11,10 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from rc_insights.alerts import AlertEngine
 from rc_insights.analyzer import SubscriptionAnalyzer
 from rc_insights.client import ChartsClient, ChartsClientError
+from rc_insights.cohort import CohortAnalyzer
 from rc_insights.models import Resolution
 from rc_insights.report import save_report
 
@@ -357,6 +360,247 @@ def list_models() -> None:
     console.print("  rc-insights report --model groq/llama-3.1-70b-versatile")
     console.print()
     console.print("[dim]Full provider list: https://docs.litellm.ai/docs/providers[/dim]")
+
+
+def _build_alert_metrics(client: ChartsClient) -> dict[str, float]:
+    """Collect metrics from the RC API for alert evaluation."""
+    metrics: dict[str, float] = {}
+
+    # --- Overview (MRR, churn, active subscribers) ---
+    try:
+        overview = client.get_overview()
+        if overview.mrr:
+            metrics["mrr"] = overview.mrr
+        if overview.churn_rate:
+            metrics["churn"] = overview.churn_rate
+        if overview.active_subscribers:
+            metrics["active_subscribers"] = overview.active_subscribers
+        if overview.active_trials:
+            metrics["active_trials"] = overview.active_trials
+        if overview.revenue:
+            metrics["revenue"] = overview.revenue
+    except ChartsClientError:
+        pass
+
+    # --- MRR percent change (last 4 weeks) ---
+    try:
+        end = date.today()
+        start = end - timedelta(days=28)
+        mrr_chart = client.get_chart("mrr", start_date=start, end_date=end, resolution=Resolution.WEEK)
+        pts = mrr_chart.data_points
+        if len(pts) >= 2:
+            first_val, last_val = pts[0][1], pts[-1][1]
+            if first_val > 0:
+                metrics["mrr_change_pct"] = ((last_val - first_val) / first_val) * 100.0
+    except ChartsClientError:
+        pass
+
+    return metrics
+
+
+@app.command()
+def alerts(
+    config: str | None = typer.Option(None, "--config", "-c", help="Path to YAML alert config (default: built-in rules)"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
+) -> None:
+    """🚨 Check subscription metrics against alert thresholds.
+
+    Uses default rules (churn > 8%, MRR drop > 10%, trial conversion < 40%)
+    unless --config points to a custom YAML file.
+    """
+    api_key, project_id, _ = _get_config(api_key, project_id)
+
+    # Load rules
+    if config:
+        try:
+            engine = AlertEngine.from_yaml(config)
+            console.print(f"[dim]Loaded {len(engine.rules)} rules from {config}[/dim]")
+        except FileNotFoundError:
+            console.print(f"[red]Config file not found:[/red] {config}")
+            raise typer.Exit(1)
+        except (KeyError, ValueError) as e:
+            console.print(f"[red]Invalid config:[/red] {e}")
+            raise typer.Exit(1)
+    else:
+        engine = AlertEngine.default_rules()
+        console.print(f"[dim]Using {len(engine.rules)} default alert rules[/dim]")
+
+    # Fetch metrics
+    with console.status("[bold blue]Fetching subscription metrics...[/bold blue]"):
+        try:
+            client = ChartsClient(api_key=api_key, project_id=project_id)
+            metrics = _build_alert_metrics(client)
+            client.close()
+        except ChartsClientError as e:
+            console.print(f"[red]API Error:[/red] {e}")
+            raise typer.Exit(1) from e
+
+    # Evaluate rules
+    all_alerts = engine.evaluate(metrics)
+    triggered = [a for a in all_alerts if a.triggered]
+    passing = [a for a in all_alerts if not a.triggered]
+    skipped = len(engine.rules) - len(all_alerts)
+
+    console.print()
+
+    if triggered:
+        console.print(
+            Panel(
+                "\n".join(f"  🔴 {a.message}" for a in triggered),
+                title=f"🚨 {len(triggered)} Alert(s) Triggered",
+                border_style="red",
+            )
+        )
+    else:
+        console.print(Panel("All checks passed ✅", title="Alerts", border_style="green"))
+
+    if passing:
+        table = Table(show_header=True, border_style="dim", title="✅ Passing Checks")
+        table.add_column("Metric")
+        table.add_column("Value", justify="right")
+        table.add_column("Threshold", justify="right")
+        for a in passing:
+            table.add_row(
+                a.rule.metric,
+                f"{a.current_value:.2f}",
+                f"{a.rule.operator} {a.rule.threshold:.2f}",
+            )
+        console.print(table)
+
+    if skipped:
+        console.print(f"[dim]⚠ {skipped} rule(s) skipped — metric data unavailable[/dim]")
+
+    if triggered:
+        raise typer.Exit(1)
+
+
+@app.command()
+def cohorts(
+    weeks: int = typer.Option(12, "--weeks", "-w", help="Number of weekly cohorts to display"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
+) -> None:
+    """📅 Show weekly cohort retention table.
+
+    Derives cohort retention from new-customer and active-subscriber time-series
+    data. Because the RevenueCat Charts API returns aggregate totals, retention
+    is approximated using an average weekly survival rate across all cohorts.
+    """
+    api_key, project_id, _ = _get_config(api_key, project_id)
+
+    with console.status(f"[bold blue]Building {weeks}-week cohort retention table...[/bold blue]"):
+        try:
+            client = ChartsClient(api_key=api_key, project_id=project_id)
+            analyzer = CohortAnalyzer(client)
+            cohort_list = analyzer.analyze(weeks=weeks)
+            client.close()
+        except ChartsClientError as e:
+            console.print(f"[red]API Error:[/red] {e}")
+            raise typer.Exit(1) from e
+
+    console.print()
+
+    if not cohort_list:
+        console.print("[yellow]⚠ No cohort data available. Try a longer time window.[/yellow]")
+        return
+
+    analyzer.render_table(cohort_list)
+
+    console.print()
+    console.print("[dim]Retention figures are approximate (derived from aggregate data).[/dim]")
+    console.print(f"[dim]Cohorts: {len(cohort_list)} | Avg cohort size: "
+                  f"{sum(c.size for c in cohort_list) // len(cohort_list):,}[/dim]")
+
+
+@app.command(name="email-report")
+def email_report(
+    to: str = typer.Option(..., "--to", help="Recipient email address"),
+    days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
+    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model string"),
+    no_ai: bool = typer.Option(False, "--no-ai", help="Skip AI analysis, use heuristics only"),
+    llm_key: str | None = typer.Option(None, "--llm-key", help="LLM API key"),
+    resend_key: str | None = typer.Option(None, "--resend-key", help="Resend API key (also reads RESEND_API_KEY env var)"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID"),
+) -> None:
+    """📧 Generate a health report and email it."""
+    api_key, project_id, resolved_llm_key = _get_config(api_key, project_id, llm_key)
+
+    from rc_insights.emails import EmailConfig, EmailSender
+
+    rkey = resend_key or os.getenv("RESEND_API_KEY", "")
+    if not rkey:
+        console.print("[red]Missing RESEND_API_KEY — set it or pass --resend-key[/red]")
+        raise typer.Exit(1)
+
+    with console.status("[bold blue]Generating report...[/bold blue]"):
+        analyzer = SubscriptionAnalyzer(
+            rc_api_key=api_key,
+            rc_project_id=project_id,
+            llm_api_key=resolved_llm_key,
+            llm_model=model,
+        )
+        report_result = analyzer.generate_report(days=days, no_ai=no_ai)
+
+    with console.status(f"[bold blue]Emailing report to {to}...[/bold blue]"):
+        config = EmailConfig(api_key=rkey)
+        with EmailSender(config=config) as sender:
+            result = sender.send_report(to=to, report=report_result)
+
+    if result.success:
+        console.print(f"[green]✅ Report emailed to {to}[/green] (ID: {result.message_id})")
+    else:
+        console.print(f"[red]❌ Failed to send: {result.error}[/red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def notify(
+    slack_url: str | None = typer.Option(None, "--slack", help="Slack incoming webhook URL"),
+    discord_url: str | None = typer.Option(None, "--discord", help="Discord webhook URL"),
+    days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
+    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model string"),
+    no_ai: bool = typer.Option(False, "--no-ai", help="Skip AI analysis, use heuristics only"),
+    llm_key: str | None = typer.Option(None, "--llm-key", help="LLM API key"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID"),
+) -> None:
+    """🔔 Generate a report and send to Slack or Discord."""
+    if not slack_url and not discord_url:
+        console.print("[red]Provide --slack or --discord webhook URL[/red]")
+        raise typer.Exit(1)
+
+    api_key, project_id, resolved_llm_key = _get_config(api_key, project_id, llm_key)
+
+    with console.status("[bold blue]Generating report...[/bold blue]"):
+        analyzer = SubscriptionAnalyzer(
+            rc_api_key=api_key,
+            rc_project_id=project_id,
+            llm_api_key=resolved_llm_key,
+            llm_model=model,
+        )
+        report_result = analyzer.generate_report(days=days, no_ai=no_ai)
+
+    from rc_insights.notifications import DiscordNotifier, SlackNotifier
+
+    if slack_url:
+        with console.status("[bold blue]Sending to Slack...[/bold blue]"):
+            notifier = SlackNotifier(webhook_url=slack_url)
+            ok = notifier.send_report(report_result)
+        if ok:
+            console.print("[green]✅ Report sent to Slack[/green]")
+        else:
+            console.print("[red]❌ Failed to send to Slack[/red]")
+
+    if discord_url:
+        with console.status("[bold blue]Sending to Discord...[/bold blue]"):
+            notifier = DiscordNotifier(webhook_url=discord_url)
+            ok = notifier.send_report(report_result)
+        if ok:
+            console.print("[green]✅ Report sent to Discord[/green]")
+        else:
+            console.print("[red]❌ Failed to send to Discord[/red]")
 
 
 if __name__ == "__main__":

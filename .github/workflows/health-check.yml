@@ -1,0 +1,35 @@
+name: Subscription Health Check
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 9 AM UTC
+  workflow_dispatch:       # Manual trigger from GitHub Actions UI
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install rc-insights
+        run: pip install rc-insights
+
+      - name: Run Health Report
+        env:
+          RC_API_KEY: ${{ secrets.RC_API_KEY }}
+          RC_PROJECT_ID: ${{ secrets.RC_PROJECT_ID }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: |
+          rc-insights report --days 7 --format md --output ./reports
+          rc-insights alerts
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report-${{ github.run_number }}
+          path: ./reports/

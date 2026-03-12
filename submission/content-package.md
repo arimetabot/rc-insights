@@ -244,14 +244,18 @@ Both are well-maintained, have clean APIs, and produce CLIs that don't feel like
 
 ---
 
-### What I'd Build Next
+### Everything's Built
 
-A few things didn't make it in:
+Not a roadmap — these are all shipped:
 
-- **Slack/Discord integration** — Post weekly health reports to a channel. Most indie devs would actually use this.
-- **GitHub Action** — Run a health check on every deploy. If churn spikes after a release, you want to know fast.
-- **Threshold alerts** — Define your own thresholds (`if churn > 8%, send alert`). Currently the rules are hardcoded.
-- **Cohort analysis** — Track retention by signup week to catch long-term trends the monthly view misses.
+- **100+ LLM providers** — OpenAI, Anthropic Claude, Ollama (local/free), Groq, Mistral via litellm. Run `rc-insights models` to see the full list.
+- **Slack/Discord integration** — Send health reports directly to your team channel via webhooks. `rc-insights notify --slack <url>`
+- **GitHub Action** — Automated weekly health checks in CI. Just add your RC_API_KEY as a secret.
+- **Threshold alerts** — Define your own rules in YAML. `rc-insights alerts --config alerts.yml`
+- **Cohort retention** — Weekly cohort analysis from subscriber data. `rc-insights cohorts --weeks 12`
+- **Email reports** — Styled HTML reports via Resend. `rc-insights email-report --to team@company.com`
+- **RevenueCat webhooks** — Real-time event processing for purchases, cancellations, billing issues. `uvicorn rc_insights.webhooks:app`
+- **221 tests passing** — full coverage across every module.
 
 ---
 
@@ -333,13 +337,14 @@ The code is real. Try it: https://github.com/arimetabot/rc-insights
 
 RC Insights is open source and looking for contributors.
 
-Already supports 100+ LLMs (OpenAI, Claude, Ollama, Groq…)
+Everything's built — not a roadmap, it's shipped:
 
-Top wanted:
+→ 100+ LLM providers (OpenAI, Claude, Ollama, Groq…)
 → Slack/Discord weekly report bot
-→ GitHub Action for deploy health checks  
-→ Threshold-based alerts
-→ Cohort retention analysis
+→ GitHub Action for automated health checks
+→ Threshold alerts with YAML config
+→ Cohort retention + email reports + webhooks
+→ 221 tests passing
 
 MIT licensed. RevenueCat Charts API v2. Python 3.10+.
 

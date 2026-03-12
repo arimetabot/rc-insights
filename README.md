@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776ab.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/tests-71%20passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-221%20passing-brightgreen.svg)]()
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![RevenueCat Charts API v2](https://img.shields.io/badge/RevenueCat-Charts%20API%20v2-ff6b6b.svg)](https://www.revenuecat.com/docs/api-v2)
 
@@ -27,7 +27,14 @@ RC Insights is an open-source tool that turns your RevenueCat Charts API data in
 - 📊 **Health Score** — Single 0-100 number summarizing your subscription business health
 - 📈 **Trend Detection** — Automatic week-over-week comparison across all metrics
 - 📄 **Export** — Markdown and HTML reports you can share with your team
-- 🔧 **Heuristic Fallback** — Works without OpenAI key using rule-based analysis
+- 🔧 **Heuristic Fallback** — Works without any LLM key using rule-based analysis
+- 🤖 **100+ LLM Providers** — OpenAI, Anthropic Claude, Ollama (local/free), Groq, Mistral, and more via litellm
+- 🚨 **Threshold Alerts** — Define custom alert rules in YAML (`if churn > 8%, alert`)
+- 📅 **Cohort Retention** — Weekly cohort analysis derived from subscriber data
+- 💬 **Slack/Discord** — Send reports directly to your team channel via webhooks
+- 📧 **Email Reports** — Deliver styled HTML reports via Resend
+- 🔗 **RevenueCat Webhooks** — Real-time event processing for purchases, cancellations, billing issues
+- ⚡ **GitHub Action** — Automated weekly health checks in CI
 
 ---
 
@@ -377,11 +384,11 @@ pytest
 
 Contributions welcome! Some ideas:
 
-- **Slack/Discord integration** — Weekly report bot
-- **GitHub Action** — Automated health checks in CI
-- **Cohort analysis** — Retention tracking by signup week
-- **Alerting** — Threshold-based notifications
-- **RevenueCat Webhooks** — Real-time event processing
+- **More chart visualizations** — Plotly/matplotlib renderers for CLI output
+- **Multi-project dashboards** — Compare health across multiple RC projects
+- **Historical trend reports** — Week-over-week health score tracking
+- **Custom insight prompts** — Let users define their own AI analysis templates
+- **Zapier/n8n integration** — Webhook-based workflow triggers
 
 ---
 

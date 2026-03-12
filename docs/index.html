@@ -1665,15 +1665,19 @@ with SubscriptionAnalyzer(
       <p><strong>Why Typer + Rich for the CLI?</strong></p>
       <p>Both are well-maintained, have clean APIs, and produce CLIs that don't feel like they were written in 2014. Rich's <code>Console.status()</code> spinner keeps the terminal from looking frozen while the API calls happen.</p>
 
-      <h2>What I'd Build Next</h2>
+      <h2>Everything's Built</h2>
 
-      <p>A few things didn't make it in:</p>
+      <p>Not a roadmap — these are all shipped and tested:</p>
 
       <ul>
-        <li><strong>Slack/Discord integration</strong> — Post weekly health reports to a channel. Most indie devs would actually use this.</li>
-        <li><strong>GitHub Action</strong> — Run a health check on every deploy. If churn spikes after a release, you want to know fast.</li>
-        <li><strong>Threshold alerts</strong> — Define your own thresholds (<code>if churn &gt; 8%, send alert</code>). Currently the rules are hardcoded.</li>
-        <li><strong>Cohort analysis</strong> — Track retention by signup week to catch long-term trends the monthly view misses.</li>
+        <li><strong>100+ LLM providers</strong> — OpenAI, Claude, Ollama (local/free), Groq, Mistral. <code>rc-insights models</code></li>
+        <li><strong>Slack/Discord integration</strong> — Health reports to your team channel. <code>rc-insights notify --slack &lt;url&gt;</code></li>
+        <li><strong>GitHub Action</strong> — Automated weekly health checks in CI.</li>
+        <li><strong>Threshold alerts</strong> — Custom YAML rules. <code>rc-insights alerts --config alerts.yml</code></li>
+        <li><strong>Cohort retention</strong> — Weekly cohort analysis. <code>rc-insights cohorts --weeks 12</code></li>
+        <li><strong>Email reports</strong> — Styled HTML via Resend. <code>rc-insights email-report --to team@co.com</code></li>
+        <li><strong>RevenueCat webhooks</strong> — Real-time event processing. <code>uvicorn rc_insights.webhooks:app</code></li>
+        <li><strong>221 tests</strong> — full coverage across every module.</li>
       </ul>
 
       <h2>Try It</h2>
@@ -1816,13 +1820,16 @@ The code is real. Try it: https://github.com/arimetabot/rc-insights</div>
         </div>
         <div class="tweet-body">RC Insights is open source and looking for contributors.
 
-Already supports 100+ LLMs (OpenAI, Claude, Ollama, Groq…)
+Everything's built — not a roadmap, it's shipped:
 
-Top wanted:
+→ 100+ LLM providers (OpenAI, Claude, Ollama, Groq…)
 → Slack/Discord weekly report bot
-→ GitHub Action for deploy health checks
-→ Threshold-based alerts
+→ GitHub Action for automated health checks
+→ Threshold alerts with YAML config
 → Cohort retention analysis
+→ Email reports via Resend
+→ RevenueCat webhooks listener
+→ 221 tests passing
 
 MIT licensed. RevenueCat Charts API v2. Python 3.10+.
 

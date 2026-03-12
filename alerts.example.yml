@@ -1,0 +1,70 @@
+# RC Insights — Alert Rules Configuration
+#
+# Copy this file to alerts.yml and run:
+#   rc-insights alerts --config alerts.yml
+#
+# Each rule fires when the named metric satisfies the given condition.
+# Missing metrics are silently skipped (no API data available).
+#
+# Supported operators:
+#   gt         – metric > threshold
+#   lt         – metric < threshold
+#   gte        – metric >= threshold
+#   lte        – metric <= threshold
+#   change_pct – abs(metric) >= abs(threshold)  (for percent-change metrics)
+
+rules:
+  # -----------------------------------------------------------------------
+  # Churn
+  # -----------------------------------------------------------------------
+
+  # Fire when monthly churn rate exceeds 8 %
+  - metric: churn
+    operator: gt
+    threshold: 8.0
+    message: "🔴 Churn rate is too high — investigate cancellation reasons."
+
+  # -----------------------------------------------------------------------
+  # MRR
+  # -----------------------------------------------------------------------
+
+  # Fire when MRR dropped more than 10 % over the last 4 weeks
+  - metric: mrr_change_pct
+    operator: lt
+    threshold: -10.0
+    message: "🔴 MRR dropped more than 10 % — check for plan downgrades or churn spike."
+
+  # Fire when MRR drops to an absolute floor (set your own value)
+  # - metric: mrr
+  #   operator: lt
+  #   threshold: 5000.0
+  #   message: "🔴 MRR fell below $5,000."
+
+  # -----------------------------------------------------------------------
+  # Trial conversion
+  # -----------------------------------------------------------------------
+
+  # Fire when trial-to-paid conversion rate drops below 40 %
+  - metric: trial_conversion
+    operator: lt
+    threshold: 40.0
+    message: "🔴 Trial conversion is low — review onboarding and trial UX."
+
+  # -----------------------------------------------------------------------
+  # Active subscribers
+  # -----------------------------------------------------------------------
+
+  # Fire when active subscriber count falls below 200
+  - metric: active_subscribers
+    operator: lt
+    threshold: 200.0
+
+  # -----------------------------------------------------------------------
+  # Refund / Revenue health
+  # -----------------------------------------------------------------------
+
+  # Fire when revenue change (percent) exceeds ±20 % in either direction
+  - metric: revenue_change_pct
+    operator: change_pct
+    threshold: 20.0
+    message: "⚠️  Revenue changed more than 20 % — investigate spike or drop."
