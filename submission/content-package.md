@@ -261,7 +261,7 @@ Not a roadmap — these are all shipped and tested:
 
 ### Try It
 
-**📺 [Watch the 2-minute demo video](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4)** — install, CLI report, Streamlit dashboard, all in one take.
+**📺 [Watch the demo video](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4)** — 97 seconds of RC Insights in action against real Dark Noise data.
 
 The code is on GitHub: [https://github.com/arimetabot/rc-insights](https://github.com/arimetabot/rc-insights)
 

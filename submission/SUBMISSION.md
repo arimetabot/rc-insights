@@ -162,10 +162,10 @@ See: [`content-package.md`](content-package.md)
 
 1,800+ words covering: the data→insight gap, tool architecture, heuristic vs. AI analysis, health score design, getting started in 60 seconds.
 
-#### Video Tutorial (~2 min)
+#### Video Demo (~97 seconds)
 See: [`video-script.md`](video-script.md)
 
-Full script for a ~2-minute screen recording walkthrough: install → CLI report → Streamlit dashboard → Python library.
+97-second motion graphics video with ElevenLabs voiceover — RC Insights in action against real Dark Noise data. Rendered in Remotion with animated dashboard mockups, terminal demos, and health score visualization.
 
 #### 5 Social Media Posts (X/Twitter)
 

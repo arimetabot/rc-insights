@@ -1,156 +1,68 @@
-# Video Tutorial Script: RC Insights Demo
+# Video Demo Script — RC Insights (v7 — Final)
 
-**Format:** Screen recording with voiceover  
-**Length:** ~2 minutes  
-**Tools:** Terminal + Streamlit dashboard + code editor
-
----
-
-## [0:00 - 0:15] Hook
-
-**SCREEN:** Split view — RevenueCat Charts dashboard on left, terminal on right.
-
-**VOICEOVER:**
-"You've got RevenueCat tracking your subscription metrics. But are you actually *using* that data? RC Insights is an open-source tool that connects to the Charts API and uses AI to tell you what matters — and what to fix."
+**Format:** Remotion-rendered motion graphics + ElevenLabs voiceover (Daniel — British broadcaster)
+**Length:** 97 seconds (6 scenes)
+**Voice:** ElevenLabs "Daniel" — steady, authoritative British male
 
 ---
 
-## [0:15 - 0:40] Install & Configure
+## Scene 1 — Hook [0:00 - 0:27]
 
-**SCREEN:** Terminal, typing commands.
+**VISUALS:** RevenueCat dashboard mockup with animated MRR line chart drawing itself, stat cards (MRR $4,537 / Churn 6.2% / Refund Rate 12.2%). Dashboard dims → large "?" appears → "But are you actually using this data?" → RC Insights title with feature pills.
 
 **VOICEOVER:**
-"Getting started takes about 60 seconds. Install from GitHub with pip..."
-
-**TYPE:**
-```
-pip install rc-insights
-```
-
-"...set your API key and project ID..."
-
-**TYPE:**
-```
-export RC_API_KEY=sk_your_key_here
-export RC_PROJECT_ID=proj_your_id
-```
-
-"...and optionally add an OpenAI key for AI-powered analysis."
-
-**TYPE:**
-```
-export OPENAI_API_KEY=sk-your-key
-```
+"You're tracking subscriptions with RevenueCat, but are you actually using that data? MRR, churn, refund rates — it's all there. But connecting the dots, spotting what matters, and knowing what to do next? That's still on you. RC Insights changes that. One command. A health score out of 100. And AI powered recommendations you can act on today."
 
 ---
 
-## [0:40 - 1:05] CLI Demo
+## Scene 2 — Demo [0:27 - 0:40]
 
-**SCREEN:** Terminal, running commands.
-
-**VOICEOVER:**
-"Let's start with the CLI. Running `rc-insights overview` gives you a quick snapshot of your key metrics."
-
-**TYPE:**
-```
-rc-insights overview
-```
-
-**SHOW:** Rich table output with metrics.
-
-"Now the real power — generate a full health report."
-
-**TYPE:**
-```
-rc-insights report --days 30
-```
-
-**SHOW:** Health score panel appears (42/100 — Mixed ⚠️), insights table, file save confirmations.
+**VISUALS:** Terminal window showing `rc-insights overview` command with "Fetching from RevenueCat..." loading animation, then metrics table populating with green-flash row highlights.
 
 **VOICEOVER:**
-"In one command, you get a health score, AI-generated insights, and a downloadable report. The AI caught a trial conversion issue and a churn spike — things I might have missed staring at charts."
+"It pulls your subscription metrics straight from RevenueCat. Active subscriptions, MRR, revenue, new customers, active users. All in one clean terminal table."
 
 ---
 
-## [1:05 - 1:35] Web Dashboard
+## Scene 3 — Analysis [0:40 - 0:58]
 
-**SCREEN:** Switch to browser, Streamlit app.
-
-**VOICEOVER:**
-"If you prefer a visual experience, there's a Streamlit dashboard."
-
-**TYPE (in terminal):**
-```
-streamlit run app.py
-```
-
-**SHOW:** Browser opens. Enter credentials in sidebar. Click "Generate Report."
+**VISUALS:** "Dark Noise 🎵" label → health score badge counting up 0→42 with amber glow → ranked insight cards with severity progress bars (red/green/amber).
 
 **VOICEOVER:**
-"Enter your credentials, hit Generate, and you get an interactive dashboard. Health score at the top, key metrics cards, AI insights with severity levels..."
-
-**SCROLL:** Show insights section.
-
-"...and interactive Plotly charts for every metric. You can zoom, hover for details, and switch between chart types."
-
-**SHOW:** Click through chart tabs, hover on data points.
-
-**VOICEOVER:**
-"And everything is exportable — Markdown for Slack and Notion, or HTML for sharing with your team."
-
-**SHOW:** Click download buttons.
+"We tested it against Dark Noise, a real indie app. Health score: 42 out of 100. Mixed signals. MRR growth slowing by 56 percent. Churn improving, down 34 percent. Refund rate at 12 percent — four times the industry benchmark. Ranked findings with real numbers."
 
 ---
 
-## [1:35 - 1:55] Code / Library
+## Scene 4 — Ecosystem [0:58 - 1:12]
 
-**SCREEN:** Code editor with Python file.
-
-**VOICEOVER:**
-"For developers who want to build on top of this, it's also a Python library."
-
-**SHOW:**
-```python
-from rc_insights import ChartsClient
-
-with ChartsClient(api_key="sk_...", project_id="proj...") as client:
-    overview = client.get_overview()
-    print(f"MRR: ${overview.mrr:,.2f}")
-    
-    churn = client.get_chart("churn", start_date="2025-01-01")
-    for ts, val in churn.data_points:
-        print(f"  {ts.date()}: {val:.1f}%")
-```
+**VISUALS:** Feature cards with icons for Streamlit, Slack, Discord, GitHub Actions, alerts, cohorts, email.
 
 **VOICEOVER:**
-"Three lines to pull your MRR. Typed responses, automatic retries, and all 9 confirmed chart types from RevenueCat's Charts API."
+"Beyond the CLI: a Streamlit dashboard, Slack and Discord integrations, GitHub Actions, threshold alerts, cohort analysis, and email reports. 222 tests passing."
 
 ---
 
-## [1:55 - 2:10] CTA
+## Scene 5 — Library [1:12 - 1:28]
 
-**SCREEN:** GitHub repo page.
+**VISUALS:** Code editor with Python snippet showing ChartsClient usage.
 
 **VOICEOVER:**
-"RC Insights is open source and free. Install it, star the repo, or contribute. Link in the description."
+"It's also a Python library. Three lines to pull your MRR. Typed responses, automatic retries, and all 9 chart types."
 
-**SHOW:** GitHub star button animation, link overlay.
+---
 
-**TEXT ON SCREEN:**
-```
-github.com/arimetabot/rc-insights
-pip install rc-insights
-Built on RevenueCat Charts API v2
-```
+## Scene 6 — CTA [1:28 - 1:37]
+
+**VISUALS:** RC Insights logo + GitHub link + "pip install rc-insights" + MIT badge.
+
+**VOICEOVER:**
+"RC Insights is open source. MIT licensed. pip install and go. Built by Ari, an AI agent running on Claude, as a take-home for RevenueCat's Agentic AI Developer and Growth Advocate role."
 
 ---
 
 ## Production Notes
 
-- **Recording:** Use OBS or ScreenFlow. 1920x1080, 30fps.
-- **Terminal theme:** Dark (match the Streamlit dark theme for consistency)
-- **Font size:** Bump terminal font to 16pt for readability
-- **Music:** Subtle lo-fi background, fade under voiceover
-- **Voiceover:** Record separately for clean audio. Alternatively, use ElevenLabs for synthesized VO.
-- **Editing:** Cut pauses, speed up install/loading sequences (2-4x)
-- **Thumbnail:** Health score "42/100" with gradient background
+- **Renderer:** Remotion (React-based motion graphics), 1920×1080, 30fps
+- **Voice:** ElevenLabs Daniel (`onwK4e9ZLuTAKqWW03F9`), eleven_multilingual_v2
+- **Design:** Dark theme (#0a0a0a), system-ui fonts, CSS-only animations
+- **Output:** H.264 MP4, AAC stereo 48kHz, ~5.5MB
