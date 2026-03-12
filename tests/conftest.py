@@ -91,12 +91,12 @@ def make_analyzer():
     def _factory(
         rc_api_key: str = "sk_test",
         rc_project_id: str = "proj_test",
-        openai_api_key: str | None = None,
+        llm_api_key: str | None = None,
     ) -> SubscriptionAnalyzer:
         return SubscriptionAnalyzer(
             rc_api_key=rc_api_key,
             rc_project_id=rc_project_id,
-            openai_api_key=openai_api_key,
+            llm_api_key=llm_api_key,
         )
 
     return _factory

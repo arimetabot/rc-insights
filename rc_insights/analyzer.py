@@ -130,20 +130,13 @@ class SubscriptionAnalyzer:
         rc_api_key: str,
         rc_project_id: str,
         *,
-        openai_api_key: str | None = None,   # Deprecated: use llm_api_key
-        openai_model: str = "gpt-4o-mini",   # Deprecated: use llm_model
         llm_api_key: str | None = None,
-        llm_model: str | None = None,
+        llm_model: str = "gpt-4o-mini",
     ) -> None:
         self.client = ChartsClient(api_key=rc_api_key, project_id=rc_project_id)
         self.project_id = rc_project_id
-        # llm_api_key takes precedence; fall back to openai_api_key for backward compat
-        self.llm_api_key = llm_api_key or openai_api_key
-        # llm_model takes precedence; fall back to openai_model for backward compat
-        self.llm_model = llm_model or openai_model
-        # Backward compat attributes so existing code referencing .openai_api_key still works
-        self.openai_api_key = self.llm_api_key
-        self.openai_model = self.llm_model
+        self.llm_api_key = llm_api_key
+        self.llm_model = llm_model
 
     def _analyze_with_ai(
         self,

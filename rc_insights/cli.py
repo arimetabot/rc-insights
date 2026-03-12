@@ -32,12 +32,11 @@ def _get_config(
 ) -> tuple[str, str, str | None]:
     """Get API keys from CLI args, environment, or .env file.
 
-    LLM key resolution order: --llm-key arg → LLM_API_KEY env → OPENAI_API_KEY env (backward compat).
+    LLM key resolution order: --llm-key arg → LLM_API_KEY env → OPENAI_API_KEY env.
     litellm also reads provider-specific env vars automatically (ANTHROPIC_API_KEY, etc.).
     """
     api_key = api_key_arg or os.getenv("RC_API_KEY", "")
     project_id = project_id_arg or os.getenv("RC_PROJECT_ID", "")
-    # LLM_API_KEY is universal; OPENAI_API_KEY is kept for backward compat
     llm_key = llm_key_arg or os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY")
 
     if not api_key:
@@ -61,7 +60,7 @@ def report(
     format: str = typer.Option("all", "--format", "-f", help="Output format: md, html, all"),
     no_ai: bool = typer.Option(False, "--no-ai", help="Skip AI analysis, use heuristics only"),
     model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model string (e.g. gpt-4o-mini, claude-sonnet-4-5, ollama/llama3, groq/llama-3.1-70b)"),
-    llm_key: str | None = typer.Option(None, "--llm-key", help="LLM API key override (also reads LLM_API_KEY or OPENAI_API_KEY from env)"),
+    llm_key: str | None = typer.Option(None, "--llm-key", help="LLM API key (also reads LLM_API_KEY or provider-specific env vars)"),
     api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
     project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
 ) -> None:
@@ -269,11 +268,12 @@ def list_charts() -> None:
 
 @app.command()
 def check(
+    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model to report on (e.g. gpt-4o-mini, claude-sonnet-4-5, ollama/llama3)"),
     api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
     project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
 ) -> None:
-    """🔍 Verify your API key and connection."""
-    api_key, project_id, openai_key = _get_config(api_key, project_id)
+    """🔍 Verify your API keys and LLM configuration."""
+    api_key, project_id, llm_key = _get_config(api_key, project_id)
 
     console.print("[bold]Checking configuration...[/bold]\n")
 
@@ -289,13 +289,74 @@ def check(
     except Exception as e:
         console.print(f"  RC API:     [red]✗ {e}[/red]")
 
-    # Check OpenAI
-    if openai_key:
-        console.print("  OpenAI:     [green]✓ Key configured[/green]")
+    # Check LLM configuration
+    console.print(f"\n  LLM Model:  [cyan]{model}[/cyan]")
+    if llm_key:
+        console.print(f"  LLM Key:    [green]✓ Configured ({'*' * 8}{llm_key[-4:]})[/green]")
     else:
-        console.print("  OpenAI:     [yellow]⚠ Not configured (heuristic mode)[/yellow]")
+        # Check provider-specific env vars that litellm reads automatically
+        provider_keys = {
+            "ANTHROPIC_API_KEY": "Anthropic",
+            "GROQ_API_KEY": "Groq",
+            "MISTRAL_API_KEY": "Mistral",
+            "AZURE_API_KEY": "Azure OpenAI",
+            "COHERE_API_KEY": "Cohere",
+        }
+        found_provider = None
+        for env_var, provider in provider_keys.items():
+            if os.getenv(env_var):
+                found_provider = f"{provider} ({env_var})"
+                break
 
-    console.print("\n[dim]All checks complete.[/dim]")
+        if found_provider:
+            console.print(f"  LLM Key:    [green]✓ {found_provider} configured[/green]")
+        elif model.startswith("ollama/"):
+            console.print("  LLM Key:    [green]✓ Ollama (local — no key needed)[/green]")
+        else:
+            console.print("  LLM Key:    [yellow]⚠ No key found — will use heuristic mode[/yellow]")
+            console.print("              [dim]Set LLM_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY[/dim]")
+
+    console.print("\n[dim]Tip: rc-insights models — list all supported LLM providers[/dim]")
+    console.print("[dim]All checks complete.[/dim]")
+
+
+@app.command(name="models")
+def list_models() -> None:
+    """🤖 List popular supported LLM models and their configuration."""
+    table = Table(title="Supported LLM Models (powered by litellm)", show_header=True, border_style="blue")
+    table.add_column("Model String", style="bold cyan")
+    table.add_column("Provider")
+    table.add_column("Env Var Required")
+    table.add_column("Notes", style="dim")
+
+    supported = [
+        ("gpt-4o-mini", "OpenAI", "OPENAI_API_KEY", "Default — fast & affordable"),
+        ("gpt-4o", "OpenAI", "OPENAI_API_KEY", "Better reasoning, higher cost"),
+        ("claude-sonnet-4-5", "Anthropic", "ANTHROPIC_API_KEY", "Fast & smart"),
+        ("claude-opus-4-5", "Anthropic", "ANTHROPIC_API_KEY", "Most capable"),
+        ("ollama/llama3", "Ollama (local)", "None — run `ollama serve`", "Free, private, offline"),
+        ("ollama/mistral", "Ollama (local)", "None — run `ollama serve`", "Lightweight"),
+        ("ollama/phi3", "Ollama (local)", "None — run `ollama serve`", "Very small & fast"),
+        ("groq/llama-3.1-70b-versatile", "Groq", "GROQ_API_KEY", "Very fast inference"),
+        ("groq/mixtral-8x7b-32768", "Groq", "GROQ_API_KEY", "Good balance"),
+        ("mistral/mistral-medium", "Mistral AI", "MISTRAL_API_KEY", "European alternative"),
+        ("azure/gpt-4o", "Azure OpenAI", "AZURE_API_KEY + AZURE_API_BASE", "Enterprise"),
+        ("gemini/gemini-1.5-flash", "Google", "GEMINI_API_KEY", "Fast multimodal"),
+        ("cohere/command-r-plus", "Cohere", "COHERE_API_KEY", "Good for RAG"),
+    ]
+
+    for model_str, provider, env_var, notes in supported:
+        table.add_row(model_str, provider, env_var, notes)
+
+    console.print(table)
+    console.print()
+    console.print("[bold]Usage examples:[/bold]")
+    console.print("  rc-insights report --model gpt-4o-mini")
+    console.print("  rc-insights report --model claude-sonnet-4-5")
+    console.print("  rc-insights report --model ollama/llama3   [dim]# local, no API key[/dim]")
+    console.print("  rc-insights report --model groq/llama-3.1-70b-versatile")
+    console.print()
+    console.print("[dim]Full provider list: https://docs.litellm.ai/docs/providers[/dim]")
 
 
 if __name__ == "__main__":

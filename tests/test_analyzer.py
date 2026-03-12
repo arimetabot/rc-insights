@@ -273,24 +273,61 @@ class TestGenerateReportErrors:
         expected_start = date.today() - timedelta(days=7)
         assert report.period_start == expected_start
 
-    def test_ai_fallback_to_heuristics_on_openai_error(self) -> None:
-        """When OpenAI raises an exception, analysis falls back to heuristics."""
+    def test_ai_fallback_to_heuristics_on_llm_error(self) -> None:
+        """When litellm raises an exception, analysis falls back to heuristics."""
         analyzer = SubscriptionAnalyzer(
             rc_api_key="sk_test",
             rc_project_id="proj_test",
-            openai_api_key="sk-fake-key",
+            llm_api_key="sk-fake-key",
         )
         overview = _make_overview()
 
-        with patch("openai.OpenAI") as mock_openai_cls:
-            mock_openai_cls.return_value.chat.completions.create.side_effect = (
-                Exception("OpenAI API error")
-            )
+        with patch("litellm.completion", side_effect=Exception("LLM API error")):
             score, summary, insights = analyzer._analyze_with_ai(overview, {})
 
         # Should have fallen back to heuristics
         assert 0.0 <= score <= 100.0
         assert len(summary) > 0
+
+    def test_litellm_success_returns_parsed_insights(self) -> None:
+        """When litellm returns valid JSON, insights are parsed correctly."""
+        import json
+
+        analyzer = SubscriptionAnalyzer(
+            rc_api_key="sk_test",
+            rc_project_id="proj_test",
+            llm_api_key="sk-fake-key",
+        )
+        overview = _make_overview()
+        fake_response_content = json.dumps({
+            "overall_health_score": 72,
+            "summary": "Business looks healthy with strong MRR.",
+            "insights": [
+                {
+                    "category": "revenue",
+                    "severity": "positive",
+                    "title": "MRR Growing",
+                    "description": "MRR up 15% over 30 days.",
+                    "recommendation": "Double down on acquisition.",
+                    "metric_value": "+15%",
+                    "trend": "up",
+                }
+            ],
+        })
+
+        mock_choice = type("Choice", (), {
+            "message": type("Msg", (), {"content": fake_response_content})(),
+        })()
+        mock_response = type("Resp", (), {"choices": [mock_choice]})()
+
+        with patch("litellm.completion", return_value=mock_response):
+            score, summary, insights = analyzer._analyze_with_ai(overview, {})
+
+        assert score == 72.0
+        assert "healthy" in summary.lower()
+        assert len(insights) == 1
+        assert insights[0].severity == "positive"
+        assert insights[0].category == "revenue"
 
 
 # ---------------------------------------------------------------------------

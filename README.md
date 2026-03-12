@@ -265,9 +265,65 @@ All chart slugs below are **verified working** against the live RevenueCat Chart
 
 ---
 
+## Supported LLMs
+
+RC Insights uses [litellm](https://docs.litellm.ai) as an abstraction layer, giving you access to **100+ LLM providers** with a single interface.
+
+| Provider | Model String | Setup |
+|----------|-------------|-------|
+| **OpenAI** (default) | `gpt-4o-mini`, `gpt-4o` | `export OPENAI_API_KEY=sk-...` |
+| **Anthropic** | `claude-sonnet-4-5`, `claude-opus-4-5` | `export ANTHROPIC_API_KEY=sk-ant-...` |
+| **Ollama** (local, free) | `ollama/llama3`, `ollama/mistral`, `ollama/phi3` | `ollama serve` (no key needed) |
+| **Groq** | `groq/llama-3.1-70b-versatile` | `export GROQ_API_KEY=gsk_...` |
+| **Mistral** | `mistral/mistral-medium` | `export MISTRAL_API_KEY=...` |
+| **Azure OpenAI** | `azure/gpt-4o` | `export AZURE_API_KEY=...` + `AZURE_API_BASE=...` |
+| **Google Gemini** | `gemini/gemini-1.5-flash` | `export GEMINI_API_KEY=...` |
+
+### Quick Provider Examples
+
+```bash
+# OpenAI (default)
+export OPENAI_API_KEY=sk-...
+rc-insights report
+
+# Anthropic Claude
+export ANTHROPIC_API_KEY=sk-ant-...
+rc-insights report --model claude-sonnet-4-5
+
+# Ollama — completely local, no API key, runs on your machine
+ollama serve &
+rc-insights report --model ollama/llama3
+
+# Groq — very fast inference, generous free tier
+export GROQ_API_KEY=gsk_...
+rc-insights report --model groq/llama-3.1-70b-versatile
+
+# Universal key override
+export LLM_API_KEY=your-key-here
+rc-insights report --model gpt-4o
+```
+
+### As a Python Library
+
+```python
+# Any litellm model string works
+analyzer = SubscriptionAnalyzer(
+    rc_api_key="sk_...",
+    rc_project_id="proj...",
+    llm_model="claude-sonnet-4-5",   # or ollama/llama3, groq/llama-3.1-70b, etc.
+    llm_api_key="sk-ant-...",        # optional: also reads from env vars
+)
+```
+
+> **No key? No problem.** Without any LLM key configured, RC Insights automatically falls back to heuristic analysis. All the trend detection and scoring still works — you just don't get the AI narrative summary.
+>
+> List all supported models: `rc-insights models`
+
+---
+
 ## How the AI Analysis Works
 
-When an OpenAI key is provided, RC Insights:
+When an LLM is configured, RC Insights:
 
 1. **Fetches** all core charts from the Charts API (9 confirmed-working endpoints)
 2. **Formats** the data into a concise summary with trends and statistics
