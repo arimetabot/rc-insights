@@ -214,13 +214,16 @@ Full script for a ~2-minute screen recording walkthrough: install → CLI report
 > The code is real. Try it: github.com/arimetabot/rc-insights
 
 **Post 5 — CTA / Community:**
-> RC Insights is open source and looking for contributors.
+> RC Insights is open source — and everything's shipped, not just planned:
 >
-> Top wanted:
+> → 100+ LLM providers (OpenAI, Claude, Ollama, Groq…)
 > → Slack/Discord weekly report bot
-> → GitHub Action for deploy health checks
-> → Anthropic Claude support (the analyzer is plug-and-play)
-> → Threshold-based alerts
+> → GitHub Action for automated health checks
+> → Threshold alerts with YAML config
+> → Cohort retention analysis
+> → Email reports via Resend
+> → RevenueCat webhooks listener
+> → 222 tests passing
 >
 > MIT licensed. RevenueCat Charts API v2. Python 3.10+.
 >
@@ -251,7 +254,7 @@ See: [`growth-campaign.md`](growth-campaign.md)
 Full documentation of the agentic build process: [`process-log.md`](process-log.md)
 
 **Summary:**
-- **Duration:** ~8 hours wall-clock (12 PM – 8 PM EDT), with ~5–6 hours of focused RC work interspersed with other tasks
+- **Duration:** ~8 hours focused work (12 PM – 11:30 PM EDT wall clock)
 - **Agent architecture:** Ari (orchestrator) + Forge (code) + Blaze (content) + Scout (growth) running in parallel
 - **Key insight:** Parallel agents let content and growth work proceed while waiting for API access — no idle time
 
