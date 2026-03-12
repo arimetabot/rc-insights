@@ -156,7 +156,7 @@ def _run_analysis(
             analyzer = SubscriptionAnalyzer(
                 rc_api_key=api_key,
                 rc_project_id=project_id,
-                openai_api_key=openai_key,
+                llm_api_key=openai_key,
             )
             report = analyzer.generate_report(
                 days=days,
@@ -218,7 +218,7 @@ def _run_analysis(
 
         for insight in report.insights:
             emoji = severity_emoji.get(insight.severity, "·")
-            css_class = f"insight-{insight.severity}"
+            css_class = f"insight-{html.escape(insight.severity)}"
             metric = f" ({insight.metric_value})" if insight.metric_value else ""
             trend = " 📈" if insight.trend == "up" else (" 📉" if insight.trend == "down" else "")
 

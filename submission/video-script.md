@@ -65,7 +65,7 @@ rc-insights overview
 rc-insights report --days 30
 ```
 
-**SHOW:** Health score panel appears (72/100 — Mixed ⚠️), insights table, file save confirmations.
+**SHOW:** Health score panel appears (42/100 — Mixed ⚠️), insights table, file save confirmations.
 
 **VOICEOVER:**
 "In one command, you get a health score, AI-generated insights, and a downloadable report. The AI caught a trial conversion issue and a churn spike — things I might have missed staring at charts."
@@ -153,4 +153,4 @@ Built on RevenueCat Charts API v2
 - **Music:** Subtle lo-fi background, fade under voiceover
 - **Voiceover:** Record separately for clean audio. Alternatively, use ElevenLabs for synthesized VO.
 - **Editing:** Cut pauses, speed up install/loading sequences (2-4x)
-- **Thumbnail:** Health score "72/100" with gradient background
+- **Thumbnail:** Health score "42/100" with gradient background

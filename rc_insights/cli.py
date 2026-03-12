@@ -20,12 +20,26 @@ from rc_insights.report import save_report
 
 load_dotenv()
 
+def _version_callback(value: bool) -> None:
+    if value:
+        from rc_insights import __version__
+        typer.echo(f"rc-insights {__version__}")
+        raise typer.Exit()
+
+
 app = typer.Typer(
     name="rc-insights",
     help="🧠 AI-powered subscription analytics for RevenueCat",
     add_completion=False,
 )
 console = Console()
+
+
+@app.callback()
+def main(
+    version: bool = typer.Option(False, "--version", "-V", help="Show version and exit", callback=_version_callback, is_eager=True),
+) -> None:
+    """🧠 AI-powered subscription analytics for RevenueCat."""
 
 
 def _get_config(
@@ -271,56 +285,56 @@ def list_charts() -> None:
 
 @app.command()
 def check(
-    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model to report on (e.g. gpt-4o-mini, claude-sonnet-4-5, ollama/llama3)"),
-    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key (overrides RC_API_KEY env var)"),
-    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID (overrides RC_PROJECT_ID env var)"),
+    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="LLM model to check"),
+    api_key: str | None = typer.Option(None, "--api-key", help="RevenueCat API key"),
+    project_id: str | None = typer.Option(None, "--project-id", help="RevenueCat project ID"),
 ) -> None:
-    """🔍 Verify your API keys and LLM configuration."""
-    api_key, project_id, llm_key = _get_config(api_key, project_id)
+    """🔍 Check your configuration and API connectivity."""
+    console.print("[bold]Configuration Check[/bold]\n")
 
-    console.print("[bold]Checking configuration...[/bold]\n")
+    # Check RC credentials
+    rc_key = api_key or os.getenv("RC_API_KEY", "")
+    rc_project = project_id or os.getenv("RC_PROJECT_ID", "")
 
-    # Check RC API
-    console.print(f"  RC API Key: [green]{'*' * 8}{api_key[-4:]}[/green]")
-    console.print(f"  Project ID: [green]{project_id}[/green]")
-
-    try:
-        client = ChartsClient(api_key=api_key, project_id=project_id)
-        overview = client.get_overview()
-        client.close()
-        console.print(f"  RC API:     [green]✓ Connected ({len(overview.metrics)} metrics)[/green]")
-    except Exception as e:
-        console.print(f"  RC API:     [red]✗ {e}[/red]")
-
-    # Check LLM configuration
-    console.print(f"\n  LLM Model:  [cyan]{model}[/cyan]")
-    if llm_key:
-        console.print(f"  LLM Key:    [green]✓ Configured ({'*' * 8}{llm_key[-4:]})[/green]")
+    if rc_key:
+        console.print(f"  RC API Key:    [green]✅ {'*' * 8}{rc_key[-4:]}[/green]")
     else:
-        # Check provider-specific env vars that litellm reads automatically
-        provider_keys = {
-            "ANTHROPIC_API_KEY": "Anthropic",
-            "GROQ_API_KEY": "Groq",
-            "MISTRAL_API_KEY": "Mistral",
-            "AZURE_API_KEY": "Azure OpenAI",
-            "COHERE_API_KEY": "Cohere",
-        }
-        found_provider = None
-        for env_var, provider in provider_keys.items():
-            if os.getenv(env_var):
-                found_provider = f"{provider} ({env_var})"
-                break
+        console.print("  RC API Key:    [red]❌ Missing — set RC_API_KEY or pass --api-key[/red]")
 
-        if found_provider:
-            console.print(f"  LLM Key:    [green]✓ {found_provider} configured[/green]")
-        elif model.startswith("ollama/"):
-            console.print("  LLM Key:    [green]✓ Ollama (local — no key needed)[/green]")
-        else:
-            console.print("  LLM Key:    [yellow]⚠ No key found — will use heuristic mode[/yellow]")
-            console.print("              [dim]Set LLM_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY[/dim]")
+    if rc_project:
+        console.print(f"  Project ID:    [green]✅ {rc_project}[/green]")
+    else:
+        console.print("  Project ID:    [red]❌ Missing — set RC_PROJECT_ID or pass --project-id[/red]")
 
-    console.print("\n[dim]Tip: rc-insights models — list all supported LLM providers[/dim]")
-    console.print("[dim]All checks complete.[/dim]")
+    # Check LLM keys
+    llm_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY")
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+
+    console.print()
+    if llm_key:
+        console.print(f"  LLM Key:       [green]✅ {'*' * 8}{llm_key[-4:]}[/green]")
+    elif anthropic_key:
+        console.print(f"  Anthropic Key: [green]✅ {'*' * 8}{anthropic_key[-4:]}[/green]")
+    else:
+        console.print("  LLM Key:       [yellow]⚠️  Not set — will use heuristic analysis (no AI insights)[/yellow]")
+
+    console.print(f"  LLM Model:     [dim]{model}[/dim]")
+
+    # API connectivity test (only if credentials are present)
+    if rc_key and rc_project:
+        console.print()
+        with console.status("[bold blue]Testing API connection...[/bold blue]"):
+            try:
+                client = ChartsClient(api_key=rc_key, project_id=rc_project)
+                overview = client.get_overview()
+                client.close()
+                console.print(f"  API Connection: [green]✅ Connected — {overview.active_subscribers:.0f} active subscribers[/green]")
+            except Exception as e:
+                console.print(f"  API Connection: [red]❌ Failed — {e}[/red]")
+    elif not rc_key or not rc_project:
+        console.print("\n  [dim]Skipping API test — set both RC_API_KEY and RC_PROJECT_ID to test connectivity[/dim]")
+
+    console.print()
 
 
 @app.command(name="models")
@@ -541,7 +555,7 @@ def email_report(
             llm_api_key=resolved_llm_key,
             llm_model=model,
         )
-        report_result = analyzer.generate_report(days=days, no_ai=no_ai)
+        report_result = analyzer.generate_report(days=days, include_ai=not no_ai)
 
     with console.status(f"[bold blue]Emailing report to {to}...[/bold blue]"):
         config = EmailConfig(api_key=rkey)
@@ -580,7 +594,7 @@ def notify(
             llm_api_key=resolved_llm_key,
             llm_model=model,
         )
-        report_result = analyzer.generate_report(days=days, no_ai=no_ai)
+        report_result = analyzer.generate_report(days=days, include_ai=not no_ai)
 
     from rc_insights.notifications import DiscordNotifier, SlackNotifier
 

@@ -163,7 +163,7 @@ See: [`content-package.md`](content-package.md)
 1,800+ words covering: the data→insight gap, tool architecture, heuristic vs. AI analysis, health score design, getting started in 60 seconds.
 
 #### Video Tutorial (~2 min)
-See: [`content/video-script.md`](content/video-script.md)
+See: [`video-script.md`](video-script.md)
 
 Full script for a ~2-minute screen recording walkthrough: install → CLI report → Streamlit dashboard → Python library.
 
@@ -291,3 +291,44 @@ Full documentation of the agentic build process: [`process-log.md`](process-log.
               │ Charts API v2 │
               └───────────────┘
 ```
+
+---
+
+## Vision: What This Looks Like at RevenueCat
+
+This take-home isn't just a deliverable — it's a proof of concept for the role itself. Here's what the same agentic workflow would look like applied to RevenueCat's developer community at scale:
+
+### 1. Developer Content at Velocity
+
+The same Blaze → Scout → Ari pipeline that produced this submission's blog post, social content, and growth campaign in under 3 hours could produce RevenueCat's developer content continuously:
+
+- **Case studies** — Pull a customer's public metrics, generate a draft analysis, have a human editor polish it. Turn one customer conversation into a blog post, a Twitter thread, a community post, and a newsletter segment.
+- **API documentation** — When a new Charts API endpoint ships, an agent reads the spec, generates code examples in Python/Swift/Kotlin, writes the docs page, and creates a "What's New" community post — all before the engineer finishes their PR description.
+- **Tutorial generation** — Every common support question becomes a tutorial candidate. An agent monitors the community forum, identifies recurring themes, and drafts tutorials that preempt future tickets.
+
+### 2. Community Growth Engine
+
+The growth campaign in this submission is manual. At RevenueCat, it would be automated:
+
+- **Community monitoring** — Agents watch r/iOSProgramming, r/androiddev, HN, and IndieHackers for RevenueCat mentions. Surface opportunities to engage, answer questions, or share relevant content.
+- **Developer outreach** — When a developer publishes an app using RevenueCat (detectable via SDK fingerprinting in open-source repos), an agent drafts a personalized congratulations + "here's how to optimize your subscription funnel" email.
+- **Content distribution** — Every piece of content automatically gets adapted for each platform (full article → Twitter thread → community post → newsletter blurb) with platform-native formatting.
+
+### 3. RC Insights as a RevenueCat Feature
+
+RC Insights could become an official RevenueCat offering:
+
+- **In-dashboard AI insights** — The same health score and insight engine, integrated directly into the RevenueCat dashboard. No CLI required. Every customer gets AI-powered subscription analysis as a native feature.
+- **Weekly digest emails** — Automated health reports delivered to every RevenueCat customer. "Your MRR grew 8% this week. Here's why, and here's what to do next." Reduces churn by making RevenueCat indispensable.
+- **Benchmark data** — With aggregate (anonymized) data across RevenueCat's customer base, the AI could tell developers: "Your churn rate is 8.2% — the median for apps in your category is 5.1%." That's a moat no competitor can replicate.
+
+### 4. The Multiplier Effect
+
+One person with an agentic workflow doesn't replace a team — they multiply their own output. A single Agentic AI Developer & Growth Advocate with this stack can:
+
+- Produce 5-10x more content than a traditional DevRel hire
+- Monitor 8+ communities simultaneously without burning out
+- Ship developer tools as fast as they can be spec'd
+- Turn every customer interaction into a content opportunity
+
+The take-home proved it works. The question is what it looks like when it's pointed at RevenueCat's ecosystem full-time.

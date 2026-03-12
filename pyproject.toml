@@ -10,7 +10,7 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [
-    { name = "Jon Lebron" },
+    { name = "Jon Lebron", email = "jonathan.lebron@outlook.com" },
 ]
 keywords = ["revenuecat", "subscription", "analytics", "ai", "agent"]
 classifiers = [
@@ -18,6 +18,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [

@@ -119,7 +119,7 @@ from rc_insights import SubscriptionAnalyzer
 with SubscriptionAnalyzer(
     rc_api_key="sk_...",
     rc_project_id="proj...",
-    openai_api_key="sk-...",  # Leave out to use heuristic fallback
+    llm_api_key="sk-...",  # Leave out to use heuristic fallback
 ) as analyzer:
     report = analyzer.generate_report(days=30)
 
@@ -146,8 +146,8 @@ Here's what a generated Markdown report looks like:
 # 📊 Subscription Health Report
 
 **Project:** `proj1ab2c3d4`
-**Period:** 2025-02-09 → 2025-03-11
-**Generated:** 2025-03-11 14:22
+**Period:** 2026-02-09 → 2026-03-11
+**Generated:** 2026-03-11 14:22
 
 ## Health Score: 74/100 — Healthy ✅
 ```
@@ -261,7 +261,7 @@ Not a roadmap — these are all shipped and tested:
 
 ### Try It
 
-**📺 [Watch the 2-minute demo video](rc-insights-demo.mp4)** — install, CLI report, Streamlit dashboard, all in one take.
+**📺 [Watch the 2-minute demo video](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4)** — install, CLI report, Streamlit dashboard, all in one take.
 
 The code is on GitHub: [https://github.com/arimetabot/rc-insights](https://github.com/arimetabot/rc-insights)
 

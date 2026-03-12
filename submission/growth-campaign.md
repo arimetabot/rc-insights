@@ -42,7 +42,7 @@ Ranked by **conversion likelihood** (probability that a viewer installs the tool
 
 ### Community 1: Hacker News — "Show HN"
 
-**Why first:** A single good HN post can deliver 2K-10K blog visitors in 24 hours. The r/SaaS analysis of 1,200 Show HN posts (2024-2025) found Tue-Thu 8-11 AM UTC gets 28% more points and comments than other windows. This is the highest-leverage zero-cost play.
+**Why first:** A single good HN post can deliver 2K-10K blog visitors in 24 hours. The r/SaaS analysis of 1,200 Show HN posts (2024-2025) found Tue-Thu 8-11 AM UTC gets 28% more points and comments than other windows. This is the highest-ROI zero-cost move.
 
 **Account:** `jonlebron` HN account. Established accounts have better algorithmic standing — new accounts are shadow-flagged. Jon's existing account is the right one.
 

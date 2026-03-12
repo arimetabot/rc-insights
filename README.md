@@ -23,7 +23,7 @@ RC Insights is an open-source tool that turns your RevenueCat Charts API data in
 
 ### Key Features
 
-- 🔌 **Charts API v2 Coverage** — 9 confirmed-working chart types (revenue, MRR, churn, actives, customers, refund rate)
+- 🔌 **Charts API v2 Coverage** — 9 confirmed-working chart types (revenue, MRR, MRR movement, churn, actives, new actives, customers, new customers, refund rate)
 - 🧠 **AI Analysis** — GPT-4o-mini generates insights, anomaly detection, and recommendations
 - 📊 **Health Score** — Single 0-100 number summarizing your subscription business health
 - 📈 **Trend Detection** — Automatic week-over-week comparison across all metrics
@@ -223,7 +223,7 @@ with ChartsClient(api_key="sk_...", project_id="proj...") as client:
 with SubscriptionAnalyzer(
     rc_api_key="sk_...",
     rc_project_id="proj...",
-    openai_api_key="sk-...",  # Optional
+    llm_api_key="sk-...",  # Optional — also reads from OPENAI_API_KEY env var
 ) as analyzer:
     report = analyzer.generate_report(days=30)
     
@@ -399,7 +399,7 @@ MIT — See [LICENSE](LICENSE) for details.
 
 ---
 
-Built with ❤️ using [RevenueCat Charts API v2](https://www.revenuecat.com/docs/api-v2) · [RevenueCat OpenClaw Skill](https://github.com/RevenueCat/revenuecat-skill)
+Built with ❤️ using [RevenueCat Charts API v2](https://www.revenuecat.com/docs/api-v2) · [litellm](https://github.com/BerriAI/litellm) · [Typer](https://typer.tiangolo.com) · [Rich](https://rich.readthedocs.io)
 
 ---
 

@@ -1311,6 +1311,7 @@
       <li><a href="#social">Social</a></li>
       <li><a href="#growth">Growth</a></li>
       <li><a href="#process">Process Log</a></li>
+      <li><a href="#vision">Vision</a></li>
     </ul>
   </div>
 </nav>
@@ -1626,7 +1627,7 @@ with ChartsClient(api_key="sk_...", project_id="proj...") as client:
 with SubscriptionAnalyzer(
     rc_api_key="sk_...",
     rc_project_id="proj...",
-    openai_api_key="sk-...",  # Leave out to use heuristic fallback
+    llm_api_key="sk-...",  # Leave out to use heuristic fallback
 ) as analyzer:
     report = analyzer.generate_report(days=30)
 
@@ -2162,7 +2163,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         </div>
         <div class="decision-callout mt-8">
           <div class="decision-callout-title">Decision: Truth over polish</div>
-          <div class="decision-callout-body">Rewrote timeline to match actual git history. Removed references to non-existent video demo. Fixed test counts. If the work is good enough to show, it's good enough to be honest about.</div>
+          <div class="decision-callout-body">Rewrote timeline to match actual git history. Fixed test counts and stale references. If the work is good enough to show, it's good enough to be honest about.</div>
         </div>
       </div>
 
@@ -2170,7 +2171,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         <div class="timeline-dot timeline-dot-green"></div>
         <div class="timeline-time">10:23–11:26 PM</div>
         <div class="timeline-title">Feature Expansion — Everything Shipped</div>
-        <div class="timeline-body">Multi-LLM support (100+ providers via litellm). Then parallel Forge agents built: threshold alerts, cohort retention, Slack/Discord notifications, RevenueCat webhooks, email reports via Resend, GitHub Action. Tests: 71 → 221. Commit 7c4edbc at 11:26 PM.</div>
+        <div class="timeline-body">Multi-LLM support (100+ providers via litellm). Then parallel Forge agents built: threshold alerts, cohort retention, Slack/Discord notifications, RevenueCat webhooks, email reports via Resend, GitHub Action. Tests: 71 → 222. Commit 7c4edbc at 11:26 PM.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-ari">🦁 Ari</span>
           <span class="timeline-tag tag-forge">⚙️ Forge ×2</span>
@@ -2236,6 +2237,49 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         Your browser does not support the video tag.
       </video>
       <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-top: 12px;">Video walkthrough — real Dark Noise data, full tool demo</div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     SECTION 7: VISION
+============================================= -->
+<section id="vision" style="padding: 96px 0; border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">07 · Vision</div>
+    <h2 class="mb-8">What This Looks Like at RevenueCat</h2>
+    <p class="mb-48" style="max-width: 640px;">This take-home isn't just a deliverable — it's a proof of concept for the role. Here's what the same agentic workflow would look like applied to RevenueCat's developer ecosystem.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 48px;">
+
+      <div style="background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 28px; border-top: 3px solid var(--green);">
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">01 · Content Velocity</div>
+        <h3 style="font-size: 1.05rem; margin-bottom: 10px;">Developer Content at Scale</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0;">The pipeline that produced this blog post, 5 social posts, and growth campaign in 3 hours — running continuously. Every customer conversation becomes a case study. Every new API endpoint generates docs, code examples, and a community post before the PR merges.</p>
+      </div>
+
+      <div style="background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 28px; border-top: 3px solid var(--amber);">
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">02 · Growth Engine</div>
+        <h3 style="font-size: 1.05rem; margin-bottom: 10px;">Automated Community Growth</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0;">Agents monitoring r/iOSProgramming, HN, and IndieHackers for RevenueCat mentions. Surfacing engagement opportunities. Adapting every piece of content for each platform automatically — full article → thread → community post → newsletter blurb.</p>
+      </div>
+
+      <div style="background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 28px; border-top: 3px solid var(--blue);">
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--blue); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">03 · Product Integration</div>
+        <h3 style="font-size: 1.05rem; margin-bottom: 10px;">RC Insights as a Feature</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0;">The health score engine, integrated into the RevenueCat dashboard. Weekly AI digest emails for every customer. Benchmark data across the customer base: "Your churn is 8.2% — median for your category is 5.1%." A moat no competitor can replicate.</p>
+      </div>
+
+      <div style="background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 28px; border-top: 3px solid var(--purple);">
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--purple); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">04 · The Multiplier</div>
+        <h3 style="font-size: 1.05rem; margin-bottom: 10px;">One Person, 10x Output</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0;">One Agentic AI Advocate with this stack produces 5-10x more content than a traditional DevRel hire. Monitors 8+ communities simultaneously. Ships developer tools as fast as they can be spec'd. Turns every customer interaction into a content opportunity.</p>
+      </div>
+
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--green-dim); border-radius: var(--radius-lg); padding: 28px; border-left: 4px solid var(--green);">
+      <p style="font-size: 0.95rem; color: var(--text); line-height: 1.8; margin: 0; font-style: italic;">"The take-home proved the workflow works. The question isn't whether an agentic approach can ship real output — this submission answers that. The question is what it looks like when it's pointed at RevenueCat's ecosystem full-time."</p>
     </div>
   </div>
 </section>
