@@ -1345,8 +1345,8 @@
       <a href="#blog" class="btn btn-ghost">
         → Read the Blog Post
       </a>
-      <a href="https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4" class="btn btn-ghost">
-        → Video Demo
+      <a href="submission/video-script.md" class="btn btn-ghost">
+        → Video Script
       </a>
     </div>
 
@@ -2039,9 +2039,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-green"></div>
-        <div class="timeline-time">~1:00 PM</div>
-        <div class="timeline-title">Assignment Intake</div>
-        <div class="timeline-body">Ari received the take-home prompt via Telegram. Parsed the three deliverables: CLI tool, content package, growth campaign.</div>
+        <div class="timeline-time">~12:00 PM</div>
+        <div class="timeline-title">Tool Scaffolding (Forge)</div>
+        <div class="timeline-body">Forge built the core rc-insights codebase: ChartsClient, SubscriptionAnalyzer, Pydantic models. API key available but no project ID yet — Jon reached out to RevenueCat.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-ari">🦁 Ari</span>
           <span class="timeline-tag tag-decision">Key Decision</span>
@@ -2054,9 +2054,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-amber"></div>
-        <div class="timeline-time">~1:10 PM</div>
-        <div class="timeline-title">API Investigation</div>
-        <div class="timeline-body">Ari made direct API calls to discover which chart endpoints actually respond. Found that many documented slugs return HTTP 400 via the API — a gap between docs and runtime behavior.</div>
+        <div class="timeline-time">~1:00 PM</div>
+        <div class="timeline-title">Session Start + Gap Analysis</div>
+        <div class="timeline-body">Ari assessed the existing tool (~85% complete). Identified gaps: no project ID, no content package, no growth campaign, no code review. Planned parallel agent spawns.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-ari">🦁 Ari</span>
         </div>
@@ -2072,9 +2072,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-green"></div>
-        <div class="timeline-time">~1:20 PM</div>
-        <div class="timeline-title">Parallel Spawn — All Three Streams Launched</div>
-        <div class="timeline-body">Ari decomposed the work into three independent streams and spawned agents simultaneously. All three workstreams are independent — no reason to sequence them.</div>
+        <div class="timeline-time">~1:00–2:30 PM</div>
+        <div class="timeline-title">Parallel Spawn — Three Streams Running</div>
+        <div class="timeline-body">Blaze (content), Scout (growth), and Forge (code review + fixes) spawned simultaneously. All independent — content and growth work proceeded while waiting for API access.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge spawned</span>
           <span class="timeline-tag tag-blaze">✍️ Blaze spawned</span>
@@ -2084,9 +2084,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-blue"></div>
-        <div class="timeline-time">~1:30 PM</div>
-        <div class="timeline-title">Tool Development (Forge)</div>
-        <div class="timeline-body">Forge built the initial rc-insights tool: ChartsClient (httpx + retry/backoff), SubscriptionAnalyzer (AI + heuristic modes), HealthReport + Pydantic models, CLI (Typer + Rich), HTML report template, test suite.</div>
+        <div class="timeline-time">~2:30 PM</div>
+        <div class="timeline-title">Content + Growth Delivered</div>
+        <div class="timeline-body">Blaze: 1,800+ word blog post, 5 social posts, video script. Scout: 8 communities ranked, full posting copy, $100 budget plan. Forge: code review (7 critical issues), all fixed, tests expanded to 66.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
         </div>
@@ -2094,9 +2094,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-amber"></div>
-        <div class="timeline-time">~1:45 PM</div>
-        <div class="timeline-title">API Discovery Challenge + Health Score Calibration</div>
-        <div class="timeline-body">Initial run against live API revealed slug mismatches. First-pass health score was 32/100 (Critical) for an app with stable MRR and improving churn — wrong signal. Recalibrated baseline from 50 → 60, adjusted penalty weights.</div>
+        <div class="timeline-time">~2:50 PM</div>
+        <div class="timeline-title">API Access Unlocked</div>
+        <div class="timeline-body">Angela from RevenueCat granted project read permissions. Project ID confirmed: proj058a6330 (Dark Noise). Tested API: 9 of 18 chart types work. Rest return 400 — app-specific, not API bugs.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
           <span class="timeline-tag tag-decision">Key Decision</span>
@@ -2109,9 +2109,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-blue"></div>
-        <div class="timeline-time">~2:00 PM</div>
-        <div class="timeline-title">Real API Data Integration (Forge)</div>
-        <div class="timeline-body">With confirmed project ID (proj058a6330 — Dark Noise by Charlie Chapman), Forge ran the tool against real API. Captured actual Dark Noise metrics: MRR $4,537, Active Subs 2,519, Health Score 42/100.</div>
+        <div class="timeline-time">3:05 PM</div>
+        <div class="timeline-title">Real Data Integration + First Commit</div>
+        <div class="timeline-body">Forge ran tool against real Dark Noise data. Trimmed ChartName enum 21→9. Recalibrated health score. MRR $4,537, Active Subs 2,519, Health Score 42/100. Git commit c769322.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
           <span class="timeline-tag tag-ari">🦁 Ari verified</span>
@@ -2120,9 +2120,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-amber"></div>
-        <div class="timeline-time">~2:30 PM</div>
-        <div class="timeline-title">Content Complete (Blaze)</div>
-        <div class="timeline-body">Blaze delivered: 1,800+ word blog post (FK ~8.5, technical but accessible), 5 social media posts (hook-first, concrete examples, CTAs), video tutorial script (2 min, screenshare format).</div>
+        <div class="timeline-time">3:05–3:50 PM</div>
+        <div class="timeline-title">Repository Setup</div>
+        <div class="timeline-body">GitHub URL updates, README badges, GitHub Pages submission site. All anchored to git commits with exact timestamps.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-blaze">✍️ Blaze</span>
         </div>
@@ -2130,9 +2130,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-purple"></div>
-        <div class="timeline-time">~2:45 PM</div>
-        <div class="timeline-title">Growth Campaign Complete (Scout)</div>
-        <div class="timeline-body">Scout identified 6 communities with post copy, exact account handles, timing windows, and budget allocation. $100 budget breakdown. UTM schema for full attribution. Week 1 + Week 2 reporting plan.</div>
+        <div class="timeline-time">6:37–7:57 PM</div>
+        <div class="timeline-title">Compliance + Final Polish</div>
+        <div class="timeline-body">Agent disclosure added to all social posts. Code quality fixes. UTC datetime, HTML charts table, test fixtures. Complete submission package assembled. 71 tests passing.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-scout">🔍 Scout</span>
         </div>
@@ -2140,9 +2140,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-blue"></div>
-        <div class="timeline-time">~3:00 PM</div>
-        <div class="timeline-title">Final Polish + Test Fix (Forge)</div>
-        <div class="timeline-body">Updated README with real CLI output. Fixed 4 test failures caused by ChartName enum reduction. Ruff clean (0 warnings). Created .env.example and verified .gitignore. Prepared git commit.</div>
+        <div class="timeline-time">8:05 PM</div>
+        <div class="timeline-title">PageSpeed Fixes — Final Commit</div>
+        <div class="timeline-body">Fixed contrast ratios, landmark regions, favicon, font loading. Last substantive commit of the build.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
         </div>
@@ -2150,9 +2150,9 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 
       <div class="timeline-event">
         <div class="timeline-dot timeline-dot-green"></div>
-        <div class="timeline-time">~3:30 PM</div>
-        <div class="timeline-title">Submission — Ari Integrates + Ships</div>
-        <div class="timeline-body">Ari collected all three workstreams, assembled SUBMISSION.md, and pushed the final package. Total wall clock time: ~3 hours for a task that could take days done linearly.</div>
+        <div class="timeline-time">~8:05 PM</div>
+        <div class="timeline-title">Submission Ready</div>
+        <div class="timeline-body">Ari collected all three workstreams, assembled SUBMISSION.md, and pushed the final package. Total wall-clock: ~8 hours (12 PM – 8 PM EDT) with ~5–6 hours of focused RC work.</div>
         <div class="mt-8">
           <span class="timeline-tag tag-ari">🦁 Ari</span>
           <span class="timeline-tag tag-forge">⚙️ Forge</span>
@@ -2161,7 +2161,7 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
         </div>
         <div class="decision-callout mt-8">
           <div class="decision-callout-title">Why this matters</div>
-          <div class="decision-callout-body">3 hours total (parallel) vs. estimated 2–3 days (linear). The parallel spawn pattern is the core of agentic development. This isn't a demo of what agents <em>could</em> do — it's what they actually did, with real code, real data, and real output you can run.</div>
+          <div class="decision-callout-body">Parallel agents meant content and growth campaigns were done before API access arrived — zero idle time. This isn't a demo of what agents <em>could</em> do — it's what they actually did, with real code, real data, and real output you can run.</div>
         </div>
       </div>
 
@@ -2199,14 +2199,11 @@ https://github.com/arimetabot/rc-insights — PRs welcome 🙏
 ============================================= -->
 <section id="video" style="padding: 64px 0;">
   <div class="container">
-    <div class="section-label">06 · Video Demo</div>
-    <h2 class="mb-24">Video Walkthrough</h2>
+    <div class="section-label">06 · Video Tutorial</div>
+    <h2 class="mb-24">Video Script</h2>
     <div style="background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 24px; text-align: center;">
-      <video controls preload="metadata" style="width: 100%; max-width: 960px; border-radius: 8px; border: 1px solid var(--border1);">
-        <source src="https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-top: 12px;">81-second walkthrough — real Dark Noise data, synthesized voiceover</div>
+      <p style="color: var(--text); font-size: 0.92rem; margin-bottom: 16px;">A ~2 minute screen recording walkthrough covering install, CLI report, Streamlit dashboard, and Python library usage.</p>
+      <a href="submission/video-script.md" style="color: var(--accent); font-family: var(--font-mono); font-size: 0.85rem;">→ View full video script</a>
     </div>
   </div>
 </section>

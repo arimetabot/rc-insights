@@ -5,7 +5,7 @@
 **Candidate:** Jon Lebron
 **Role:** Agentic AI Developer & Growth Advocate
 **Date:** March 11, 2026
-**Total time:** ~3 hours
+**Total time:** ~8 hours wall-clock (12:00 PM – 8:05 PM), with ~5–6 hours of focused RC work interspersed with other tasks
 
 ---
 
@@ -26,56 +26,71 @@ Four specialized agents ran in parallel, each owning a distinct workstream:
 
 ## Timeline
 
-### ~1:00 PM — Assignment Intake
-- Ari received the take-home prompt via Telegram
-- Parsed the three deliverables: CLI tool, content package, growth campaign
-- Made key architecture decision: build a real Python tool (not a mockup) that hits the actual Charts API
+All timestamps are EDT (America/New_York) and anchored to git commits or file creation timestamps.
 
-### ~1:10 PM — API Investigation
-- Discovered RC Charts API v2 base URL: `https://api.revenuecat.com/v2/projects/{project_id}/charts`
-- Challenge: didn't have a project ID yet, only the API key
-- Ari made direct API calls to test which chart endpoints would respond
-- Found that many chart slugs documented in the dashboard return HTTP 400 via the API
+### ~12:00 PM — Initial Tool Scaffolding (Forge)
 
-### ~1:20 PM — Architecture Decision: Parallel Spawn
-
-Ari decomposed the work into three independent streams and spawned agents simultaneously:
-- **Forge** → Build the Python CLI tool
-- **Blaze** → Write the blog post and social content
-- **Scout** → Research communities and build the campaign
-
-This mirrors how a real agentic workflow handles complex, multi-part tasks — no waiting for one to finish before starting another.
-
-### ~1:30 PM — Tool Development (Forge)
-
-Forge built the initial rc-insights tool:
+Forge built the initial rc-insights codebase:
 - `ChartsClient` — httpx-based API client with retry/backoff logic
 - `SubscriptionAnalyzer` — analysis engine with AI + heuristic modes
-- `HealthReport` + Pydantic models — typed output
-- CLI (Typer + Rich) — `report`, `overview`, `chart`, `check`, `charts` commands
-- HTML report template (dark mode, Jinja2)
-- Test suite (pytest, 71 tests)
+- `models.py` — Pydantic data models for API responses
+- `__init__.py` — package exports
 
-### ~1:45 PM — API Discovery Challenge
+File creation timestamps confirm: `__init__.py` at 12:00:49, `models.py` at 12:01:11, `client.py` at 12:01:41, `analyzer.py` at 12:02:32.
 
-Initial run against the live API revealed a mismatch between documented slugs and working endpoints. Many chart names that appear in the RevenueCat dashboard return HTTP 400 via the Charts API.
+At this point we had the API key but no project ID — every Charts endpoint requires `/v2/projects/{project_id}/charts/...` and the key didn't have permission to list projects. Jon reached out to RevenueCat to request it.
 
-**Working slugs (confirmed via live API):**
+### ~1:00 PM — Take-Home Session Start
+
+Ari assessed the existing tool: ~85% complete. Key gaps identified:
+- No project ID (couldn't test against real data)
+- No content package (blog post, video script, social posts)
+- No growth campaign
+- No code review or test coverage audit
+- CLI needed flags for API key / project ID
+
+Architecture decision: decompose into three independent workstreams and spawn agents simultaneously.
+
+### ~1:00–2:30 PM — Parallel Agent Spawns
+
+Three agents ran in parallel:
+
+**Blaze** (Content) → Delivered:
+- Blog post (~1,550 words): hooks on "AI agent applying for a job" angle, walks through problem → code → architecture
+- 5 X/Twitter posts with agent disclosure woven in naturally
+- Video tutorial script (2 min, screenshare format)
+
+**Scout** (Growth) → Delivered:
+- 8 communities ranked by conversion likelihood (not vanity size)
+- Full posting copy for 4 communities, tailored to platform culture
+- $100 budget breakdown with measurement plan and KPIs
+
+**Forge** (Code Review + Fixes) → Delivered:
+- Code review found 7 critical issues (lazy import, auth error swallowing, no 5xx retry, dead code, crash on malformed data, missing .env.example, schema inconsistency)
+- Fixed all 7 issues + 3 additional fixes
+- Expanded test suite from 22 to 66 tests
+
+During this window, Ari was also working on other tasks (email infrastructure setup, Shopify theme investigation) — the agents ran autonomously.
+
+### ~2:50 PM — API Access Unlocked
+
+Angela from RevenueCat granted read permissions for charts and projects. Project ID confirmed: `proj058a6330` (Dark Noise app by Charlie Chapman).
+
+Ari tested the API directly: 9 of 18 documented chart types return data. The rest return HTTP 400 — likely app-specific (Dark Noise doesn't use all features), not API bugs.
+
+**Working chart types (confirmed via live API):**
 `revenue`, `mrr`, `churn`, `refund_rate`, `actives`, `actives_new`, `customers_new`, `customers_active`, `mrr_movement`
 
-**Non-working slugs (HTTP 400):**
-`annual_recurring_revenue`, `active_subscriptions`, `active_trials`, `new_customers`, `new_subscriptions`, `trial_conversion`, `realized_ltv_per_customer`, `initial_conversion`, `active_subscriptions_movement`
+### 3:05 PM — Real API Data Integration + First Commit
 
-**Decision:** Only use confirmed-working endpoints. Remove non-working slugs from `ChartName` enum and `get_all_core_charts()`. Update README to document this behavior. Better to be accurate than to show impressive (but misleading) feature breadth.
+Forge completed final polish with real API data:
 
-### ~2:00 PM — Real API Data Integration (Forge)
-
-With the confirmed project ID (`proj058a6330` — Dark Noise app by Charlie Chapman), Forge:
-1. Created `.env` with real credentials
-2. Fixed `ChartName` enum to 9 confirmed-working values
-3. Added `--api-key` / `--project-id` CLI flags for flexibility
-4. Enhanced heuristic analyzer with more meaningful rules
-5. Ran tool against real API — got actual Dark Noise metrics
+1. Ran tool against real Dark Noise data
+2. Fixed `ChartName` enum — trimmed from 21 to 9 confirmed-working values
+3. Rewrote heuristic analyzer with 8 rules
+4. Recalibrated health score (baseline from 50 → 60)
+5. Updated README with live output
+6. All tests passing, ruff clean
 
 **Real data captured (March 11, 2026 — last 30 days):**
 - MRR: $4,537 (stable)
@@ -85,26 +100,33 @@ With the confirmed project ID (`proj058a6330` — Dark Noise app by Charlie Chap
 - Active Users: 14,098 (28-day)
 - Health Score: 42/100 (Mixed)
 
-### ~2:30 PM — Content Complete (Blaze)
+First git commit: `c769322` at 3:05 PM.
 
-Blaze delivered:
-- 1,800+ word blog post (FK score ~8.5, technical but accessible)
-- 5 social media posts (hook-first, concrete examples, CTA)
-- Video tutorial script (2 min, screenshare format)
+### 3:05–3:50 PM — Repository Setup
 
-### ~2:45 PM — Growth Campaign Complete (Scout)
+- Updated all GitHub URLs to `arimetabot/rc-insights` (3:26 PM)
+- Added badges for Python, tests, ruff, RevenueCat (3:35 PM)
+- Created GitHub Pages submission site (3:42 PM)
+- Embedded video tutorial link (3:50 PM)
 
-Scout identified 8 communities with post copy, exact account handles, timing, and budget allocation:
-- RevenueCat Community, r/iOSProgramming (~200K members), HN Show HN, r/androiddev, IndieHackers, X/Twitter, Dev.to, Product Hunt
-- $100 budget breakdown: 50% Reddit promoted ($50: r/iOSProgramming + r/androiddev), 35% X promoted ($35), 15% Week 2 reallocation buffer ($15)
+### 6:37–6:38 PM — Compliance Pass
 
-### ~3:00 PM — Final Polish (Forge)
+- Added agent disclosure to all 5 social posts (assignment requirement)
+- Resolved code quality issues found in review
 
-- Updated README with real CLI output from Dark Noise
-- Fixed all 4 test failures (caused by ChartName enum reduction + baseline score change)
-- Ruff clean (0 warnings)
-- Created .env.example and verified .gitignore
-- Prepared git commit
+### 7:25–7:57 PM — Final Polish
+
+- Fixed UTC datetime handling
+- Added full resolution support
+- HTML charts table improvements
+- Shared test fixtures
+- Created complete submission package (`submission/` directory)
+- Updated Pages links
+
+### 8:05 PM — PageSpeed Fixes
+
+- Fixed contrast ratios, landmark regions, favicon, font loading
+- Final commit of substantive work
 
 ---
 
@@ -133,23 +155,23 @@ Scout identified 8 communities with post copy, exact account handles, timing, an
 ### 5. Multi-agent parallel execution
 **Decision:** Spawn Forge (code), Blaze (content), Scout (growth) simultaneously.
 **Why:** All three workstreams are independent — no reason to sequence them.
-**Result:** 3-hour total wall clock time for a task that could take days linearly.
+**Result:** Content and growth campaign were ready before the API access came through, so the moment we had real data, we could integrate everything quickly.
 
 ---
 
 ## Challenges
 
 ### API Slug Discovery
-The RevenueCat Charts API v2 documentation doesn't clearly enumerate which chart slugs are valid. The only way to know what works is to call the API and see what comes back. Most returns 400 with no helpful error message. Solved by iterating through all documented slugs against the live API.
+The RevenueCat Charts API v2 documentation doesn't clearly enumerate which chart slugs are valid for a given app. The only way to know what works is to call the API and see what comes back. Most slugs returned 400 with no helpful error message. Solved by iterating through all documented slugs against the live API.
 
 ### Project ID Access
-Initially only had the API key, not the project ID. Had to discover the project ID by calling the `/v2/projects` endpoint, which returned `proj058a6330`.
+Initially only had the API key, not the project ID. The key didn't have permission to list projects (403). Had to ask RevenueCat directly — Angela granted the additional permission at ~2:50 PM, which unblocked the real data integration.
 
 ### Heuristic Score Calibration
 First pass had a health score of 32/100 (Critical) for an app that's actually in decent shape — stable MRR, improving churn. Recalibrated baseline from 50 to 60 and adjusted penalty weights to produce a more accurate signal.
 
 ### Test Suite After Schema Changes
-Reducing ChartName from 21 to 9 broke 4 tests. The `trial_conversion_rate` heuristic test needed replacing with a `customers_new` test. The "critical insight for MRR decline" test needed updating to accept "warning" (the new correct severity for that scenario).
+Reducing ChartName from 21 to 9 broke 4 tests. The `trial_conversion_rate` heuristic test needed replacing with a `customers_new` test. The "critical insight for MRR decline" test needed updating to accept "warning" (the new correct severity for that scenario). Final count: 71 tests passing.
 
 ---
 

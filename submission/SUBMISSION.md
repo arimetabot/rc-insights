@@ -23,7 +23,7 @@ RC Insights connects to RevenueCat's Charts API v2, pulls your subscription data
 
 **Tech stack:** Python · Pydantic · Typer · Rich · Streamlit · httpx · OpenAI · Jinja2
 
-**Tests:** 71 passing (pytest) | **Linted:** ruff ✅
+**Tests:** 71 passing (pytest) | **Linting:** ruff ✅
 
 ---
 
@@ -163,9 +163,9 @@ See: [`content-package.md`](content-package.md)
 1,800+ words covering: the data→insight gap, tool architecture, heuristic vs. AI analysis, health score design, getting started in 60 seconds.
 
 #### Video Tutorial (~2 min)
-See: [`video-script.md`](video-script.md) | Demo: [`rc-insights-demo.mp4`](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4)
+See: [`video-script.md`](video-script.md)
 
-Full screen recording walkthrough: install → CLI report → Streamlit dashboard → Python library. ~2 minutes.
+Full script for a ~2-minute screen recording walkthrough: install → CLI report → Streamlit dashboard → Python library.
 
 #### 5 Social Media Posts (X/Twitter)
 
@@ -251,9 +251,9 @@ See: [`growth-campaign.md`](growth-campaign.md)
 Full documentation of the agentic build process: [`process-log.md`](process-log.md)
 
 **Summary:**
-- **Duration:** ~3 hours wall clock time
+- **Duration:** ~8 hours wall-clock (12 PM – 8 PM EDT), with ~5–6 hours of focused RC work interspersed with other tasks
 - **Agent architecture:** Ari (orchestrator) + Forge (code) + Blaze (content) + Scout (growth) running in parallel
-- **Key insight:** Using parallel agents reduced a potentially multi-day task to an afternoon
+- **Key insight:** Parallel agents let content and growth work proceed while waiting for API access — no idle time
 
 ---
 

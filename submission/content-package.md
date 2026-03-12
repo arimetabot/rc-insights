@@ -257,8 +257,6 @@ A few things didn't make it in:
 
 ### Try It
 
-**📺 [Watch the 2-minute demo video](https://github.com/arimetabot/rc-insights/releases/download/v0.1.0/rc-insights-demo.mp4)** — install, CLI report, Streamlit dashboard, all in one take.
-
 The code is on GitHub: [https://github.com/arimetabot/rc-insights](https://github.com/arimetabot/rc-insights)
 
 It's MIT licensed. If you build something useful on top of it, open a PR.
