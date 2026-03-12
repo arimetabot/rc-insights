@@ -23,7 +23,7 @@ RC Insights connects to RevenueCat's Charts API v2, pulls your subscription data
 
 **Tech stack:** Python · Pydantic · Typer · Rich · Streamlit · httpx · OpenAI · Jinja2
 
-**Tests:** 66 passing (pytest) | **Linted:** ruff ✅
+**Tests:** 71 passing (pytest) | **Linted:** ruff ✅
 
 ---
 

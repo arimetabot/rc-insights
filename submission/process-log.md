@@ -54,7 +54,7 @@ Forge built the initial rc-insights tool:
 - `HealthReport` + Pydantic models — typed output
 - CLI (Typer + Rich) — `report`, `overview`, `chart`, `check`, `charts` commands
 - HTML report template (dark mode, Jinja2)
-- Test suite (pytest, 66 tests)
+- Test suite (pytest, 71 tests)
 
 ### ~1:45 PM — API Discovery Challenge
 
@@ -163,7 +163,7 @@ Reducing ChartName from 21 to 9 broke 4 tests. The `trial_conversion_rate` heuri
 | Data Models | Pydantic v2 (strict type checking) |
 | AI Analysis | OpenAI gpt-4o-mini (optional) |
 | Report Templates | Jinja2 (HTML), custom Markdown |
-| Testing | pytest, 66 tests, ruff |
+| Testing | pytest, 71 tests, ruff |
 | Env Management | python-dotenv |
 | Agent comms | Telegram (Ari → Jon channel) |
 
@@ -194,7 +194,7 @@ Each sub-agent had:
 - No knowledge of the other agents' work
 - A defined output format for easy integration
 
-This is the same architecture used in production at LMG (Jon's AI company) for content pipelines, trading systems, and client work.
+This is the same architecture used in production at Basecamp Labs for content pipelines, trading systems, and client work.
 
 ---
 
